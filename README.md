@@ -9,6 +9,10 @@
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1250/badge)](https://bestpractices.coreinfrastructure.org/projects/1250)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/coredns/coredns/badge)](https://scorecard.dev/viewer/?uri=github.com/coredns/coredns)
 
+> [!NOTE] 
+> This fork relies on a [fork](https://github.com/mr-torgue/dns) of the well known [dns](https://github.com/miekg/dns) library.
+> It uses OpenSSL instead of the default go/crypto library, which allows us to use post-quantum cryptography. 
+
 CoreDNS is a DNS server/forwarder, written in Go, that chains [plugins](https://coredns.io/plugins).
 Each plugin performs a (DNS) function.
 
