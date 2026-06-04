@@ -7,10 +7,10 @@ BUILDOPTS?=-v
 GOTAGS?=grpcnotrace
 GOPATH?=$(HOME)/go
 MAKEPWD:=$(dir $(realpath $(firstword $(MAKEFILE_LIST))))
-CGO_ENABLED?=0
+CGO_ENABLED?=1
 GOLANG_VERSION ?= $(shell cat .go-version)
 STRIP_FLAGS?=-s -w
-LDFLAGS?=-ldflags="$(STRIP_FLAGS) -X github.com/coredns/coredns/coremain.GitCommit=$(GITCOMMIT)"
+LDFLAGS?=-ldflags="$(STRIP_FLAGS) -X github.com/mr-torgue/coredns/coremain.GitCommit=$(GITCOMMIT)"
 
 export GOSUMDB = sum.golang.org
 export GOTOOLCHAIN = go$(GOLANG_VERSION)

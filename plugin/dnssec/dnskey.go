@@ -2,9 +2,6 @@ package dnssec
 
 import (
 	"context"
-	"crypto"
-	"crypto/ecdsa"
-	"crypto/rsa"
 	"encoding/json"
 	"errors"
 	"os"
@@ -18,7 +15,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"github.com/mr-torgue/dns"
 	"github.com/mr-torgue/go-openssl"
-	"golang.org/x/crypto/ed25519"
 )
 
 // DNSKEY holds a DNSSEC public and private key used for on-the-fly signing.
@@ -119,17 +115,11 @@ func ParseKeyFromAWSSecretsManager(secretID string) (*DNSKEY, error) {
 	}
 
 	// Create the DNSKEY structure
-	var s crypto.Signer
+	var s openssl.PrivateKey
 	var tag uint16
-	switch key := p.(type) {
-	case *rsa.PrivateKey:
-		s = key
-		tag = dk.KeyTag()
-	case *ecdsa.PrivateKey:
-		s = key
-		tag = dk.KeyTag()
-	case ed25519.PrivateKey:
-		s = key
+	switch dk.Algorithm {
+	case dns.RSASHA1, dns.RSASHA1NSEC3SHA1, dns.RSASHA256, dns.RSASHA512, dns.ECDSAP256SHA256, dns.ECDSAP384SHA384, dns.ED25519, dns.FALCON512, dns.P256_FALCON512, dns.RSA3072_FALCON512, dns.FALCON1024, dns.P521_FALCON1024:
+		s = p
 		tag = dk.KeyTag()
 	default:
 		return nil, errors.New("unsupported key type")

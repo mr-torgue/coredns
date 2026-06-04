@@ -1,9 +1,6 @@
 package sign
 
 import (
-	"crypto"
-	"crypto/ecdsa"
-	"crypto/rsa"
 	"fmt"
 	"io"
 	"os"
@@ -13,16 +10,16 @@ import (
 
 	"github.com/coredns/caddy"
 	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/go-openssl"
 
 	"github.com/mr-torgue/dns"
-	"golang.org/x/crypto/ed25519"
 )
 
 // Pair holds DNSSEC key information, both the public and private components are stored here.
 type Pair struct {
 	Public  *dns.DNSKEY
 	KeyTag  uint16
-	Private crypto.Signer
+	Private openssl.PrivateKey
 }
 
 // keyParse reads the public and private key from disk.
@@ -94,15 +91,11 @@ func readKeyPair(public, private string) (Pair, error) {
 	if err != nil {
 		return Pair{}, err
 	}
-	switch signer := privkey.(type) {
-	case *ecdsa.PrivateKey:
-		return Pair{Public: dnskey.(*dns.DNSKEY), KeyTag: dnskey.(*dns.DNSKEY).KeyTag(), Private: signer}, nil
-	case ed25519.PrivateKey:
-		return Pair{Public: dnskey.(*dns.DNSKEY), KeyTag: dnskey.(*dns.DNSKEY).KeyTag(), Private: signer}, nil
-	case *rsa.PrivateKey:
-		return Pair{Public: dnskey.(*dns.DNSKEY), KeyTag: dnskey.(*dns.DNSKEY).KeyTag(), Private: signer}, nil
+	switch dnskey.(*dns.DNSKEY).Algorithm {
+	case dns.RSASHA1, dns.RSASHA1NSEC3SHA1, dns.RSASHA256, dns.RSASHA512, dns.ECDSAP256SHA256, dns.ECDSAP384SHA384, dns.ED25519, dns.FALCON512, dns.P256_FALCON512, dns.RSA3072_FALCON512, dns.FALCON1024, dns.P521_FALCON1024:
+		return Pair{Public: dnskey.(*dns.DNSKEY), KeyTag: dnskey.(*dns.DNSKEY).KeyTag(), Private: privkey}, nil
 	default:
-		return Pair{}, fmt.Errorf("unsupported algorithm %s", signer)
+		return Pair{}, fmt.Errorf("unsupported algorithm %s", privkey)
 	}
 }
 
