@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 )
 
 func TestErrorsParse(t *testing.T) {

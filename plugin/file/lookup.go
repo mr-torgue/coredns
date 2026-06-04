@@ -3,13 +3,13 @@ package file
 import (
 	"context"
 
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin/file/rrutil"
-	"github.com/coredns/coredns/plugin/file/tree"
-	"github.com/coredns/coredns/plugin/metadata"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin/file/rrutil"
+	"github.com/mr-torgue/coredns/plugin/file/tree"
+	"github.com/mr-torgue/coredns/plugin/metadata"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Result is the result of a Lookup

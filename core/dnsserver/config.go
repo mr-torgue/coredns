@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/request"
 
 	"github.com/pires/go-proxyproto"
 )

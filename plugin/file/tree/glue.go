@@ -1,9 +1,9 @@
 package tree
 
 import (
-	"github.com/coredns/coredns/plugin/file/rrutil"
+	"github.com/mr-torgue/coredns/plugin/file/rrutil"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Glue returns any potential glue records for nsrrs.

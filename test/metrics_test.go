@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/metrics"
-	"github.com/coredns/coredns/plugin/metrics/vars"
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/metrics"
+	"github.com/mr-torgue/coredns/plugin/metrics/vars"
+	"github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Because we don't properly shutdown the metrics servers we are re-using the metrics between tests, not a superbad issue

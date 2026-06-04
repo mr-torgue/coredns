@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/coredns/coredns/plugin/metadata"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/metadata"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Replacer replaces labels for values in strings.

@@ -7,13 +7,13 @@ import (
 	"net"
 	"time"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/pkg/cache"
-	"github.com/coredns/coredns/plugin/pkg/dnsutil"
-	"github.com/coredns/coredns/plugin/pkg/response"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/pkg/cache"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
+	"github.com/mr-torgue/coredns/plugin/pkg/response"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Cache is a plugin that looks up responses in a cache and caches replies.

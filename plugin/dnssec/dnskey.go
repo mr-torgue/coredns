@@ -12,11 +12,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/request"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
+	"github.com/mr-torgue/go-openssl"
 	"golang.org/x/crypto/ed25519"
 )
 
@@ -24,7 +25,7 @@ import (
 type DNSKEY struct {
 	K   *dns.DNSKEY
 	D   *dns.DS
-	s   crypto.Signer
+	s   openssl.PrivateKey
 	tag uint16
 }
 
@@ -62,13 +63,13 @@ func ParseKeyFile(pubFile, privFile string) (*DNSKEY, error) {
 		return nil, e
 	}
 
-	if s, ok := p.(*rsa.PrivateKey); ok {
+	if s, ok := p.(openssl.PrivateKey); ok {
 		return &DNSKEY{K: dk, D: dk.ToDS(dns.SHA256), s: s, tag: dk.KeyTag()}, nil
 	}
-	if s, ok := p.(*ecdsa.PrivateKey); ok {
+	if s, ok := p.(openssl.PrivateKey); ok {
 		return &DNSKEY{K: dk, D: dk.ToDS(dns.SHA256), s: s, tag: dk.KeyTag()}, nil
 	}
-	if s, ok := p.(ed25519.PrivateKey); ok {
+	if s, ok := p.(openssl.PrivateKey); ok {
 		return &DNSKEY{K: dk, D: dk.ToDS(dns.SHA256), s: s, tag: dk.KeyTag()}, nil
 	}
 	return nil, errors.New("no private key found")

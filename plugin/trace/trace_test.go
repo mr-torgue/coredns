@@ -9,15 +9,15 @@ import (
 	"testing"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/pkg/rcode"
-	"github.com/coredns/coredns/plugin/test"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/pkg/rcode"
+	"github.com/mr-torgue/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/request"
 
 	"github.com/DataDog/dd-trace-go/v2/ddtrace/mocktracer"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/opentracing/opentracing-go"
 	openTracingMock "github.com/opentracing/opentracing-go/mocktracer"
 )

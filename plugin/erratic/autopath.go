@@ -1,6 +1,6 @@
 package erratic
 
-import "github.com/coredns/coredns/request"
+import "github.com/mr-torgue/coredns/request"
 
 // AutoPath implements the AutoPathFunc call from the autopath plugin.
 func (e *Erratic) AutoPath(_state request.Request) []string {

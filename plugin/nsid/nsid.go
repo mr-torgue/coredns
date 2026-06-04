@@ -5,9 +5,9 @@ import (
 	"context"
 	"encoding/hex"
 
-	"github.com/coredns/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Nsid plugin

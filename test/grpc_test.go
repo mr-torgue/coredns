@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/pb"
+	"github.com/mr-torgue/coredns/pb"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"

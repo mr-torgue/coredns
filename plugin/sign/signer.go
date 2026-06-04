@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/coredns/coredns/plugin/file"
-	"github.com/coredns/coredns/plugin/file/tree"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/file/tree"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 var log = clog.NewWithPlugin("sign")

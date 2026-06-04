@@ -3,7 +3,7 @@ package nonwriter
 import (
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestNonWriter(t *testing.T) {

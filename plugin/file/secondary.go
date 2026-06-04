@@ -4,9 +4,9 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/coredns/coredns/plugin/transfer"
+	"github.com/mr-torgue/coredns/plugin/transfer"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // TransferIn retrieves the zone from the masters, parses it and sets it live.

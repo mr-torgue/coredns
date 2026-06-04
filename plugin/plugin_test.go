@@ -5,7 +5,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // mockResponseWriter implements dns.ResponseWriter for testing

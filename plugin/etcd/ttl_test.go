@@ -3,7 +3,7 @@ package etcd
 import (
 	"testing"
 
-	"github.com/coredns/coredns/plugin/etcd/msg"
+	"github.com/mr-torgue/coredns/plugin/etcd/msg"
 
 	"go.etcd.io/etcd/api/v3/mvccpb"
 )

@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	testutil "github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	testutil "github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const oneDomainWRR = `

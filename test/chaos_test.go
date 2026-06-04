@@ -5,9 +5,9 @@ import (
 
 	// Plug in CoreDNS, needed for AppVersion and AppName in this test.
 	"github.com/coredns/caddy"
-	_ "github.com/coredns/coredns/coremain"
+	_ "github.com/mr-torgue/coredns/coremain"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestChaos(t *testing.T) {

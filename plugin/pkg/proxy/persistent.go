@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // a persistConn holds the dns.Conn, its creation time, and the last used time.

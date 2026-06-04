@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/parse"
-	"github.com/coredns/coredns/plugin/pkg/transport"
+	"github.com/mr-torgue/coredns/plugin/pkg/parse"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // hostEntry represents a hostname-based TO address that needs DNS resolution.

@@ -2,7 +2,7 @@
 package nonwriter
 
 import (
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Writer is a type of ResponseWriter that captures the message, but never writes to the client.

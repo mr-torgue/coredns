@@ -2,7 +2,7 @@
 package bind
 
 import (
-	"github.com/coredns/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin"
 )
 
 func init() { plugin.Register("bind", setup) }

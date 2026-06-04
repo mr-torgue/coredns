@@ -6,7 +6,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/quic-go/quic-go"
 )
 

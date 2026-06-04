@@ -7,15 +7,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/pkg/fall"
-	"github.com/coredns/coredns/plugin/test"
-	crequest "github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/pkg/fall"
+	"github.com/mr-torgue/coredns/plugin/test"
+	crequest "github.com/mr-torgue/coredns/request"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 type fakeRoute53 struct {

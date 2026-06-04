@@ -3,7 +3,7 @@ package loadbalance
 import (
 	"net"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func reorderPreferredSubnets(msg *dns.Msg, subnets []*net.IPNet) *dns.Msg {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/coredns/caddy"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestSign(t *testing.T) {

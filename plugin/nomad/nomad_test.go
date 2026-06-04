@@ -6,11 +6,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/test"
 
 	nomad "github.com/hashicorp/nomad/api"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestNomad(t *testing.T) {

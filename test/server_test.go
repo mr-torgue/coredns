@@ -8,9 +8,9 @@ import (
 	"unsafe"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/core/dnsserver"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Start 2 tests server, server A will proxy to B, server B is an CH server.

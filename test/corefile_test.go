@@ -12,14 +12,14 @@ func TestCorefileParsing(t *testing.T) {
 		corefile string
 	}{
 		{
-			// See: https://github.com/coredns/coredns/pull/4637
+			// See: https://github.com/mr-torgue/coredns/pull/4637
 			name: "PR4637_" + "NoPanicOnEscapedBackslashesAndUnicode",
 			corefile: `\\\\ȶ.
 acl
 `,
 		},
 		{
-			// See: https://github.com/coredns/coredns/pull/7571
+			// See: https://github.com/mr-torgue/coredns/pull/7571
 			name: "PR7571_" + "InvalidBlockFailsToStart",
 			corefile: "\xD9//\n" +
 				"hosts#\x90\xD0{lc\x0C{\n" +

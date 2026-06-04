@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/coredns/coredns/plugin/pkg/transport"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // ErrNoNameservers is returned by HostPortOrFile if no servers can be parsed.

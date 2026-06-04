@@ -3,9 +3,9 @@ package test
 import (
 	"testing"
 
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const loopDB = `example.com. 500 IN SOA ns1.outside.com. root.example.com. 3 604800 86400 2419200 604800

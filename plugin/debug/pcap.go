@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/coredns/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/pkg/log"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Hexdump converts the dns message m to a hex dump Wireshark can import.

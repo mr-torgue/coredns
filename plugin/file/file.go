@@ -7,13 +7,13 @@ import (
 	"io"
 	"os"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/pkg/fall"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/plugin/transfer"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/pkg/fall"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/transfer"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 var log = clog.NewWithPlugin("file")

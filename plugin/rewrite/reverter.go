@@ -1,7 +1,7 @@
 package rewrite
 
 import (
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // RevertPolicy controls the overall reverting process

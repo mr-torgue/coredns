@@ -3,7 +3,7 @@ package rcode
 import (
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestToString(t *testing.T) {

@@ -3,10 +3,10 @@ package plugin
 import (
 	"context"
 
-	"github.com/coredns/coredns/plugin/etcd/msg"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/etcd/msg"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // ServiceBackend defines a (dynamic) backend that returns a slice of service definitions.

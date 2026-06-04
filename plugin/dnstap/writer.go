@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/coredns/coredns/plugin/dnstap/msg"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/dnstap/msg"
+	"github.com/mr-torgue/coredns/request"
 
 	tap "github.com/dnstap/golang-dnstap"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // ResponseWriter captures the client response and logs the query to dnstap.

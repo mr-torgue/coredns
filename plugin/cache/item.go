@@ -5,10 +5,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/coredns/coredns/plugin/cache/freq"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/cache/freq"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 type item struct {

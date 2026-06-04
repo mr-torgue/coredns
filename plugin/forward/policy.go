@@ -4,8 +4,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/proxy"
-	"github.com/coredns/coredns/plugin/pkg/rand"
+	"github.com/mr-torgue/coredns/plugin/pkg/proxy"
+	"github.com/mr-torgue/coredns/plugin/pkg/rand"
 )
 
 // Policy defines a policy we use for selecting upstreams.

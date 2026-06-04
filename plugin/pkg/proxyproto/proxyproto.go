@@ -8,7 +8,7 @@ import (
 	"net"
 	"time"
 
-	clog "github.com/coredns/coredns/plugin/pkg/log"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 
 	"github.com/hashicorp/golang-lru/v2/expirable"
 	"github.com/pires/go-proxyproto"

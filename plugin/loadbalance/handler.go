@@ -4,9 +4,9 @@ package loadbalance
 import (
 	"context"
 
-	"github.com/coredns/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // LoadBalance is a plugin to rewrite responses for "load balancing".

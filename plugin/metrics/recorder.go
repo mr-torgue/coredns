@@ -1,9 +1,9 @@
 package metrics
 
 import (
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Recorder is a dnstest.Recorder specific to the metrics plugin.

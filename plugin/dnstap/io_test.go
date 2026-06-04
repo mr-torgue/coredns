@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/reuseport"
+	"github.com/mr-torgue/coredns/plugin/pkg/reuseport"
 
 	tap "github.com/dnstap/golang-dnstap"
 	fs "github.com/farsightsec/golang-framestream"

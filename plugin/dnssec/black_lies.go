@@ -3,10 +3,10 @@ package dnssec
 import (
 	"strings"
 
-	"github.com/coredns/coredns/plugin/pkg/response"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/pkg/response"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // nsec returns an NSEC useful for NXDOMAIN responses.

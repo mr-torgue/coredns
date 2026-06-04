@@ -7,12 +7,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/etcd/msg"
-	"github.com/coredns/coredns/plugin/transfer"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/etcd/msg"
+	"github.com/mr-torgue/coredns/plugin/transfer"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	api "k8s.io/api/core/v1"
 )
 
@@ -91,7 +91,7 @@ func (k *Kubernetes) transferServices(ch chan []dns.RR, zonePath string) {
 					s.Key = strings.Join(svcBase, "/")
 
 					// Need to generate this to handle use cases for peer-finder
-					// ref: https://github.com/coredns/coredns/pull/823
+					// ref: https://github.com/mr-torgue/coredns/pull/823
 					ch <- []dns.RR{s.NewSRV(msg.Domain(s.Key), 100)}
 
 					// As per spec unnamed ports do not have a srv record
@@ -182,7 +182,7 @@ func (k *Kubernetes) transferMultiClusterServices(ch chan []dns.RR, zonePath str
 				s.Key = strings.Join(svcBase, "/")
 
 				// Need to generate this to handle use cases for peer-finder
-				// ref: https://github.com/coredns/coredns/pull/823
+				// ref: https://github.com/mr-torgue/coredns/pull/823
 				ch <- []dns.RR{s.NewSRV(msg.Domain(s.Key), 100)}
 
 				// As per spec unnamed ports do not have a srv record

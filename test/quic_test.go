@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/core/dnsserver"
-	ctls "github.com/coredns/coredns/plugin/pkg/tls"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	ctls "github.com/mr-torgue/coredns/plugin/pkg/tls"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/quic-go/quic-go"
 )
 

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 var sup = &supported{m: make(map[uint16]struct{})}

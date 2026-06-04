@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net"
 
-	"github.com/coredns/coredns/plugin/metadata"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/metadata"
+	"github.com/mr-torgue/coredns/request"
 )
 
 // DefaultEnv returns the default set of custom state variables and functions available to for use in expression evaluation.

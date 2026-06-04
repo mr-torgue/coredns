@@ -5,8 +5,8 @@ package file
 import (
 	"strings"
 
-	"github.com/coredns/coredns/plugin/pkg/fuzz"
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/pkg/fuzz"
+	"github.com/mr-torgue/coredns/plugin/test"
 )
 
 // Fuzz fuzzes file.

@@ -3,7 +3,7 @@ package msg
 import (
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestType(t *testing.T) {

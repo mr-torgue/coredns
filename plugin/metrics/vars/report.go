@@ -3,7 +3,7 @@ package vars
 import (
 	"time"
 
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/request"
 )
 
 // ReportOptions is a struct that contains available options for the Report function.

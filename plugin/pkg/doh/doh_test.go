@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestDoH(t *testing.T) {

@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestPrefetch(t *testing.T) {
@@ -213,7 +213,7 @@ type verification struct {
 
 // TestPrefetchDedup verifies that concurrent hits on a single cache item
 // dispatch at most one prefetch goroutine, on both the serve_stale and
-// shouldPrefetch paths. See https://github.com/coredns/coredns/issues/7904.
+// shouldPrefetch paths. See https://github.com/mr-torgue/coredns/issues/7904.
 func TestPrefetchDedup(t *testing.T) {
 	for _, tc := range []struct {
 		name       string

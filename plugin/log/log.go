@@ -5,15 +5,15 @@ import (
 	"context"
 	"time"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/metadata"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/plugin/pkg/replacer"
-	"github.com/coredns/coredns/plugin/pkg/response"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/metadata"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/pkg/replacer"
+	"github.com/mr-torgue/coredns/plugin/pkg/response"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Logger is a basic request logging plugin.

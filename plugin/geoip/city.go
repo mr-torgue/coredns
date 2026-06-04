@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/coredns/coredns/plugin/metadata"
+	"github.com/mr-torgue/coredns/plugin/metadata"
 
 	"github.com/oschwald/geoip2-golang/v2"
 )

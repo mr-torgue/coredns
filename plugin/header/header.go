@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	clog "github.com/coredns/coredns/plugin/pkg/log"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Supported flags

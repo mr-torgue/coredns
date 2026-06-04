@@ -10,18 +10,18 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/metadata"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/plugin/pkg/rcode"
-	_ "github.com/coredns/coredns/plugin/pkg/trace" // Plugin the trace package.
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/metadata"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/pkg/rcode"
+	_ "github.com/mr-torgue/coredns/plugin/pkg/trace" // Plugin the trace package.
+	"github.com/mr-torgue/coredns/request"
 
 	"github.com/DataDog/dd-trace-go/v2/ddtrace/ext"
 	"github.com/DataDog/dd-trace-go/v2/ddtrace/tracer"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	ot "github.com/opentracing/opentracing-go"
 	otext "github.com/opentracing/opentracing-go/ext"
 	otlog "github.com/opentracing/opentracing-go/log"
@@ -244,7 +244,7 @@ func (t *trace) setZipkinSpanTags(span ot.Span, req request.Request, rw *dnstest
 	if !plugin.ClientWrite(status) {
 		// when no response was written, fallback to status returned from next plugin as this status
 		// is actually used as rcode of DNS response
-		// see https://github.com/coredns/coredns/blob/master/core/dnsserver/server.go#L318
+		// see https://github.com/mr-torgue/coredns/blob/master/core/dnsserver/server.go#L318
 		rc = status
 	}
 	span.SetTag(t.tagSet.Rcode, rcode.ToString(rc))

@@ -3,9 +3,9 @@ package header
 import (
 	"context"
 
-	"github.com/coredns/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Header modifies flags of dns.MsgHdr in queries and / or responses

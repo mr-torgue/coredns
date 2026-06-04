@@ -4,7 +4,7 @@ import (
 	"net"
 
 	"github.com/hashicorp/nomad/api"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func addSRVRecord(m *dns.Msg, s *api.ServiceRegistration, header dns.RR_Header, originalQName string, addr net.IP, ttl uint32) error {

@@ -3,7 +3,7 @@ package autopath
 import (
 	"strings"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // cnamer will prefix the answer section with a cname that points from original qname to the

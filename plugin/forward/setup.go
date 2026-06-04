@@ -11,15 +11,15 @@ import (
 	"time"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/dnstap"
-	"github.com/coredns/coredns/plugin/pkg/parse"
-	"github.com/coredns/coredns/plugin/pkg/proxy"
-	pkgtls "github.com/coredns/coredns/plugin/pkg/tls"
-	"github.com/coredns/coredns/plugin/pkg/transport"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/dnstap"
+	"github.com/mr-torgue/coredns/plugin/pkg/parse"
+	"github.com/mr-torgue/coredns/plugin/pkg/proxy"
+	pkgtls "github.com/mr-torgue/coredns/plugin/pkg/tls"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func init() {

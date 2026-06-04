@@ -4,13 +4,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/pkg/expression"
-	ptest "github.com/coredns/coredns/plugin/test"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/pkg/expression"
+	ptest "github.com/mr-torgue/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/request"
 
 	"github.com/expr-lang/expr"
 	"github.com/expr-lang/expr/vm"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestFilter_NoPrograms(t *testing.T) {

@@ -1,7 +1,7 @@
 package loadbalance
 
 import (
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const (

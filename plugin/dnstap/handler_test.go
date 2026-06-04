@@ -5,12 +5,12 @@ import (
 	"net"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/dnstap/msg"
-	"github.com/coredns/coredns/plugin/metadata"
-	test "github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/dnstap/msg"
+	"github.com/mr-torgue/coredns/plugin/metadata"
+	test "github.com/mr-torgue/coredns/plugin/test"
 
 	tap "github.com/dnstap/golang-dnstap"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func testCase(t *testing.T, tapq, tapr *tap.Dnstap, q, r *dns.Msg, extraFormat string) {

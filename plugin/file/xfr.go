@@ -1,10 +1,10 @@
 package file
 
 import (
-	"github.com/coredns/coredns/plugin/file/tree"
-	"github.com/coredns/coredns/plugin/transfer"
+	"github.com/mr-torgue/coredns/plugin/file/tree"
+	"github.com/mr-torgue/coredns/plugin/transfer"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Transfer implements the transfer.Transfer interface.

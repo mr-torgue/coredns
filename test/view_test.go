@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestView(t *testing.T) {
@@ -176,7 +176,7 @@ func TestViewServerBlockOrdering(t *testing.T) {
 	// All scenarios use distinct zone names and are combined into a single
 	// Corefile/server instance to avoid stop/start races with SO_REUSEPORT.
 	//
-	// See https://github.com/coredns/coredns/issues/7733
+	// See https://github.com/mr-torgue/coredns/issues/7733
 
 	corefile := `example.org:0 {
 		erratic

@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/test"
-	"github.com/coredns/coredns/plugin/whoami"
+	"github.com/mr-torgue/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/whoami"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestBufsize(t *testing.T) {

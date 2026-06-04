@@ -3,8 +3,8 @@ package view
 import (
 	"context"
 
-	"github.com/coredns/coredns/plugin/metadata"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/metadata"
+	"github.com/mr-torgue/coredns/request"
 )
 
 // Metadata implements the metadata.Provider interface.

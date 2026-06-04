@@ -5,9 +5,9 @@ import (
 	"io"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/cache"
+	"github.com/mr-torgue/coredns/plugin/pkg/cache"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // hash serializes the RRset and returns a signature cache key.

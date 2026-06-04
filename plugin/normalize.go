@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/coredns/coredns/plugin/pkg/cidr"
-	"github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/plugin/pkg/parse"
+	"github.com/mr-torgue/coredns/plugin/pkg/cidr"
+	"github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/pkg/parse"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // See core/dnsserver/address.go - we should unify these two impls.

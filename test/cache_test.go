@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestLookupCache(t *testing.T) {
@@ -175,7 +175,7 @@ func TestLookupCacheWithoutEdns(t *testing.T) {
 //	"fatal error: concurrent map read and map write"
 //
 // or trigger the race detector. With the fix, the test should be stable.
-// See: https://github.com/coredns/coredns/issues/7630
+// See: https://github.com/mr-torgue/coredns/issues/7630
 func TestIssue7630(t *testing.T) {
 	name, rm, err := test.TempFile(".", exampleOrg)
 	if err != nil {

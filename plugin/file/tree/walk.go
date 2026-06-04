@@ -1,6 +1,6 @@
 package tree
 
-import "github.com/miekg/dns"
+import "github.com/mr-torgue/dns"
 
 // Walk performs fn on all authoritative values stored in the tree in
 // in-order depth first. If a non-nil error is returned the Walk was interrupted

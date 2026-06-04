@@ -11,15 +11,15 @@ import (
 	"time"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/plugin/metrics/vars"
-	"github.com/coredns/coredns/plugin/pkg/dnsutil"
-	"github.com/coredns/coredns/plugin/pkg/doh"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/plugin/pkg/response"
-	"github.com/coredns/coredns/plugin/pkg/reuseport"
-	"github.com/coredns/coredns/plugin/pkg/transport"
+	"github.com/mr-torgue/coredns/plugin/metrics/vars"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
+	"github.com/mr-torgue/coredns/plugin/pkg/doh"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/pkg/response"
+	"github.com/mr-torgue/coredns/plugin/pkg/reuseport"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/pires/go-proxyproto"
 	"golang.org/x/net/netutil"
 )

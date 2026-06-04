@@ -3,11 +3,11 @@
 package forward
 
 import (
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/pkg/fuzz"
-	"github.com/coredns/coredns/plugin/pkg/proxy"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/pkg/fuzz"
+	"github.com/mr-torgue/coredns/plugin/pkg/proxy"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 var f *Forward

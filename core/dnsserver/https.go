@@ -4,7 +4,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // DoHWriter is a dns.ResponseWriter that adds more specific LocalAddr and RemoteAddr methods.

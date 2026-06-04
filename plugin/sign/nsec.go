@@ -3,10 +3,10 @@ package sign
 import (
 	"slices"
 
-	"github.com/coredns/coredns/plugin/file"
-	"github.com/coredns/coredns/plugin/file/tree"
+	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/file/tree"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // names returns the elements of the zone in nsec order.

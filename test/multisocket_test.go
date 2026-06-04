@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // pickPort returns a free TCP port on 127.0.0.1 and closes the probe listener.

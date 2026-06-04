@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/kubernetes/object"
+	"github.com/mr-torgue/coredns/plugin/kubernetes/object"
 
 	api "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

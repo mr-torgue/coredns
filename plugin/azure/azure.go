@@ -7,15 +7,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/file"
-	"github.com/coredns/coredns/plugin/pkg/fall"
-	"github.com/coredns/coredns/plugin/pkg/upstream"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/pkg/fall"
+	"github.com/mr-torgue/coredns/plugin/pkg/upstream"
+	"github.com/mr-torgue/coredns/request"
 
 	publicdns "github.com/Azure/azure-sdk-for-go/profiles/latest/dns/mgmt/dns"
 	privatedns "github.com/Azure/azure-sdk-for-go/profiles/latest/privatedns/mgmt/privatedns"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 type zone struct {

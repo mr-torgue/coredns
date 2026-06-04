@@ -1,6 +1,6 @@
 package file
 
-import "github.com/miekg/dns"
+import "github.com/mr-torgue/dns"
 
 // replaceWithAsteriskLabel replaces the left most label with '*'.
 func replaceWithAsteriskLabel(qname string) (wildcard string) {

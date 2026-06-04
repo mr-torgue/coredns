@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/plugin"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 )
 
 var log = clog.NewWithPlugin("pprof")

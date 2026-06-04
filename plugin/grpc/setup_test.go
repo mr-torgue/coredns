@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/plugin/pkg/fall"
+	"github.com/mr-torgue/coredns/plugin/pkg/fall"
 )
 
 func TestSetup(t *testing.T) {

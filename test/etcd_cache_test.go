@@ -6,9 +6,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/etcd/msg"
+	"github.com/mr-torgue/coredns/plugin/etcd/msg"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // uses some stuff from etcd_tests.go

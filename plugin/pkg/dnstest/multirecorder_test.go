@@ -3,7 +3,7 @@ package dnstest
 import (
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestMultiWriteMsg(t *testing.T) {

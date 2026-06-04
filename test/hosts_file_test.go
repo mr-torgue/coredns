@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestHostsInlineLookup(t *testing.T) {

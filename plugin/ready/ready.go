@@ -12,9 +12,9 @@ import (
 	"sync"
 	"time"
 
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/plugin/pkg/reuseport"
-	"github.com/coredns/coredns/plugin/pkg/uniq"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/pkg/reuseport"
+	"github.com/mr-torgue/coredns/plugin/pkg/uniq"
 )
 
 var (

@@ -7,9 +7,9 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const name = "whoami"

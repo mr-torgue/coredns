@@ -3,7 +3,7 @@ package auto
 import (
 	"testing"
 
-	"github.com/coredns/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/file"
 )
 
 func TestZonesNames(t *testing.T) {

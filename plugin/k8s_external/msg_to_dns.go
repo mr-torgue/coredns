@@ -4,11 +4,11 @@ import (
 	"context"
 	"math"
 
-	"github.com/coredns/coredns/plugin/etcd/msg"
-	"github.com/coredns/coredns/plugin/pkg/dnsutil"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/etcd/msg"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func (e *External) a(ctx context.Context, services []msg.Service, state request.Request) (records []dns.RR, truncated bool) {

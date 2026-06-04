@@ -5,9 +5,9 @@ import (
 	"net"
 	"strings"
 
-	"github.com/coredns/coredns/plugin/pkg/edns"
+	"github.com/mr-torgue/coredns/plugin/pkg/edns"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Request contains some connection state and is useful in plugin.

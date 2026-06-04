@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/pkg/log"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func msg() *dns.Msg {

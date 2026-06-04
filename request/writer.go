@@ -3,7 +3,7 @@ package request
 import (
 	"crypto/tls"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // ScrubWriter will, when writing the message, call scrub to make it fit the client's buffer.

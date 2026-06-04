@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // MimeType is the DoH mimetype that should be used.

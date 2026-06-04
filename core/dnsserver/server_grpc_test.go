@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/pb"
-	"github.com/coredns/coredns/plugin/pkg/transport"
+	"github.com/mr-torgue/coredns/pb"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/peer"
 )

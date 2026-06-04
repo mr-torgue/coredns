@@ -3,9 +3,9 @@ package file
 import (
 	"net"
 
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // isNotify checks if state is a notify message and if so, will *also* check if it

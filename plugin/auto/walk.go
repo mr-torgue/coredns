@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/coredns/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/file"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Walk will recursively walk of the file under l.directory and adds the one that match l.re.

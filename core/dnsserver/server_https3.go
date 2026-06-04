@@ -10,15 +10,15 @@ import (
 	"time"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/plugin/metrics/vars"
-	"github.com/coredns/coredns/plugin/pkg/dnsutil"
-	"github.com/coredns/coredns/plugin/pkg/doh"
-	cproxyproto "github.com/coredns/coredns/plugin/pkg/proxyproto"
-	"github.com/coredns/coredns/plugin/pkg/response"
-	"github.com/coredns/coredns/plugin/pkg/reuseport"
-	"github.com/coredns/coredns/plugin/pkg/transport"
+	"github.com/mr-torgue/coredns/plugin/metrics/vars"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
+	"github.com/mr-torgue/coredns/plugin/pkg/doh"
+	cproxyproto "github.com/mr-torgue/coredns/plugin/pkg/proxyproto"
+	"github.com/mr-torgue/coredns/plugin/pkg/response"
+	"github.com/mr-torgue/coredns/plugin/pkg/reuseport"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/quic-go/quic-go"
 	"github.com/quic-go/quic-go/http3"
 )

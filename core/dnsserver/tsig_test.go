@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 type tsigStatusCheckPlugin struct {

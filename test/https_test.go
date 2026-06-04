@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 var httpsCorefile = `https://.:0 {

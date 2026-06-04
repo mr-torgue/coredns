@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // less returns <0 when a is less than b, 0 when they are equal and

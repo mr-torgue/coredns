@@ -1,6 +1,6 @@
 package cache
 
-import "github.com/miekg/dns"
+import "github.com/mr-torgue/dns"
 
 // filterRRSlice filters out OPT RRs, and sets all RR TTLs to ttl.
 // If dup is true the RRs in rrs are _copied_ before adjusting their

@@ -3,7 +3,7 @@ package tree
 import (
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Test that Name() falls back to reading from the stored RRs when the cached name is empty.

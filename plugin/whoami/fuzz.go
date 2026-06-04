@@ -3,7 +3,7 @@
 package whoami
 
 import (
-	"github.com/coredns/coredns/plugin/pkg/fuzz"
+	"github.com/mr-torgue/coredns/plugin/pkg/fuzz"
 )
 
 // Fuzz fuzzes cache.

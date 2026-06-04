@@ -6,10 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/coredns/coredns/plugin/file"
-	"github.com/coredns/coredns/plugin/file/tree"
+	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/file/tree"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // write writes out the zone file to a temporary file which is then moved into the correct place.

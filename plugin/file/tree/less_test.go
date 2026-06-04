@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 type set []string

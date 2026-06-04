@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	ctls "github.com/coredns/coredns/plugin/pkg/tls"
+	ctls "github.com/mr-torgue/coredns/plugin/pkg/tls"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/quic-go/quic-go/http3"
 )
 

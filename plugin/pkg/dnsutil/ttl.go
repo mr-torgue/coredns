@@ -3,9 +3,9 @@ package dnsutil
 import (
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/response"
+	"github.com/mr-torgue/coredns/plugin/pkg/response"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // MinimalTTL scans the message returns the lowest TTL found taking into the response.Type of the message.

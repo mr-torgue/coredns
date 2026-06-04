@@ -3,7 +3,7 @@ package request
 import (
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestSupportedOptions(t *testing.T) {

@@ -5,13 +5,13 @@ import (
 	"net"
 	"strings"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/metrics"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/metrics"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/request"
 
 	"github.com/infobloxopen/go-trees/iptree"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // ACL enforces access control policies on DNS queries.

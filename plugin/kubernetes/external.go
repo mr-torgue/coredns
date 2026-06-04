@@ -3,12 +3,12 @@ package kubernetes
 import (
 	"strings"
 
-	"github.com/coredns/coredns/plugin/etcd/msg"
-	"github.com/coredns/coredns/plugin/kubernetes/object"
-	"github.com/coredns/coredns/plugin/pkg/dnsutil"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/etcd/msg"
+	"github.com/mr-torgue/coredns/plugin/kubernetes/object"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Those constants are used to distinguish between records in ExternalServices headless

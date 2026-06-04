@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/reuseport"
+	"github.com/mr-torgue/coredns/plugin/pkg/reuseport"
 )
 
 type handler struct {

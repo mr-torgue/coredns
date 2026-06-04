@@ -3,9 +3,9 @@ package transfer
 import (
 	"fmt"
 
-	"github.com/coredns/coredns/plugin/pkg/rcode"
+	"github.com/mr-torgue/coredns/plugin/pkg/rcode"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Notify will send notifies to all configured to hosts IP addresses. The string zone must be lowercased.

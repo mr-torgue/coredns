@@ -11,15 +11,15 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/debug"
-	"github.com/coredns/coredns/plugin/dnstap"
-	"github.com/coredns/coredns/plugin/metadata"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	proxyPkg "github.com/coredns/coredns/plugin/pkg/proxy"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/debug"
+	"github.com/mr-torgue/coredns/plugin/dnstap"
+	"github.com/mr-torgue/coredns/plugin/metadata"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	proxyPkg "github.com/mr-torgue/coredns/plugin/pkg/proxy"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	ot "github.com/opentracing/opentracing-go"
 	otext "github.com/opentracing/opentracing-go/ext"
 )

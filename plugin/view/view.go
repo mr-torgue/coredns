@@ -3,13 +3,13 @@ package view
 import (
 	"context"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/pkg/expression"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/pkg/expression"
+	"github.com/mr-torgue/coredns/request"
 
 	"github.com/expr-lang/expr"
 	"github.com/expr-lang/expr/vm"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // View is a plugin that enables configuring expression based advanced routing

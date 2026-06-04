@@ -7,7 +7,7 @@ import (
 	"net"
 	"syscall"
 
-	"github.com/coredns/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/pkg/log"
 
 	"golang.org/x/sys/unix"
 )

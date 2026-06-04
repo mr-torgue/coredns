@@ -6,12 +6,12 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/coredns/coredns/plugin/dnstap/msg"
-	"github.com/coredns/coredns/plugin/pkg/proxy"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/dnstap/msg"
+	"github.com/mr-torgue/coredns/plugin/pkg/proxy"
+	"github.com/mr-torgue/coredns/request"
 
 	tap "github.com/dnstap/golang-dnstap"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // toDnstap will send the forward and received message to the dnstap plugin.

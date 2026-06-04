@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/dnstap/msg"
-	"github.com/coredns/coredns/plugin/pkg/replacer"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/dnstap/msg"
+	"github.com/mr-torgue/coredns/plugin/pkg/replacer"
+	"github.com/mr-torgue/coredns/request"
 
 	tap "github.com/dnstap/golang-dnstap"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Dnstap is the dnstap handler.

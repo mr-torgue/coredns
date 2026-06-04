@@ -3,12 +3,12 @@ package metrics
 import (
 	"context"
 
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/metrics/vars"
-	"github.com/coredns/coredns/plugin/pkg/rcode"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/metrics/vars"
+	"github.com/mr-torgue/coredns/plugin/pkg/rcode"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // ServeDNS implements the Handler interface.
@@ -32,7 +32,7 @@ func (m *Metrics) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 	if !plugin.ClientWrite(status) {
 		// when no response was written, fallback to status returned from next plugin as this status
 		// is actually used as rcode of DNS response
-		// see https://github.com/coredns/coredns/blob/master/core/dnsserver/server.go#L318
+		// see https://github.com/mr-torgue/coredns/blob/master/core/dnsserver/server.go#L318
 		rc = status
 	}
 	// Pass the original request size to vars.Report

@@ -3,9 +3,9 @@ package any
 import (
 	"context"
 
-	"github.com/coredns/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Any is a plugin that returns a HINFO reply to ANY queries.

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/file/tree"
+	"github.com/mr-torgue/coredns/plugin/file/tree"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestNameFromRight(t *testing.T) {

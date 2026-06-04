@@ -3,9 +3,9 @@ package test
 import (
 	"testing"
 
-	mtest "github.com/coredns/coredns/plugin/test"
+	mtest "github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Using miek.nl here because this is the easiest zone to get access to and its masters

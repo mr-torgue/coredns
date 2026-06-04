@@ -12,9 +12,9 @@ import (
 	"strings"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/core/dnsserver"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"golang.org/x/crypto/ed25519"
 )
 

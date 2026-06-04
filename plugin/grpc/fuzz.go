@@ -5,11 +5,11 @@ package grpc
 import (
 	"context"
 
-	"github.com/coredns/coredns/pb"
-	"github.com/coredns/coredns/plugin/pkg/fuzz"
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/pb"
+	"github.com/mr-torgue/coredns/plugin/pkg/fuzz"
+	"github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	grpcgo "google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
