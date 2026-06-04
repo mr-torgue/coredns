@@ -305,7 +305,7 @@ func (w *testImportOrderingWalker) walk(path string, info os.FileInfo, _ error) 
 }
 
 func importtype(s string) string {
-	if strings.Contains(s, "github.com/coredns") {
+	if strings.Contains(s, "github.com/mr-torgue/coredns") || strings.Contains(s, "github.com/coredns") {
 		return "coredns"
 	}
 	if strings.Contains(s, ".") {

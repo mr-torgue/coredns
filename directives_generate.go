@@ -127,7 +127,7 @@ func formatAndWrite(file string, data string) error {
 }
 
 const (
-	githubOrg    = "github.com/coredns"
+	githubOrg    = "github.com/mr-torgue"
 	pluginPath   = githubOrg + "/coredns/plugin/"
 	pluginFile   = "plugin.cfg"
 	pluginFSPath = "plugin/" // Where the plugins are located on the file system
