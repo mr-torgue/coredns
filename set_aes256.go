@@ -2,7 +2,6 @@
 
 package main
 
-
 import (
 	"crypto/tls"
 	_ "unsafe"
@@ -18,15 +17,15 @@ var defaultCipherSuitesTLS13 []uint16
 //go:linkname defaultCipherSuitesTLS13NoAES crypto/tls.defaultCipherSuitesTLS13NoAES
 var defaultCipherSuitesTLS13NoAES []uint16
 
-defaultCipherSuitesTLS13 = []uint16{
-	tls.TLS_AES_256_GCM_SHA384,
-	//tls.TLS_AES_128_GCM_SHA256,
-	tls.TLS_CHACHA20_POLY1305_SHA256,
+func init() {
+	defaultCipherSuitesTLS13 = []uint16{
+		tls.TLS_AES_256_GCM_SHA384,
+		//tls.TLS_AES_128_GCM_SHA256,
+		tls.TLS_CHACHA20_POLY1305_SHA256,
+	}
+	defaultCipherSuitesTLS13NoAES = []uint16{
+		tls.TLS_CHACHA20_POLY1305_SHA256,
+		tls.TLS_AES_256_GCM_SHA384,
+		//tls.TLS_AES_128_GCM_SHA256,
+	}
 }
-defaultCipherSuitesTLS13NoAES = []uint16{
-	tls.TLS_CHACHA20_POLY1305_SHA256,
-	tls.TLS_AES_256_GCM_SHA384,
-	//tls.TLS_AES_128_GCM_SHA256,
-}
-
-
