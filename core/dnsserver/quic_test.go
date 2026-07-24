@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/coredns/coredns/request"
+	"github.com/miekg/dns"
 )
 
 func TestDoQWriterAddPrefix(t *testing.T) {
@@ -71,8 +72,12 @@ func TestDoQWriter_Proto(t *testing.T) {
 		t.Errorf("Expected Network to be quic but got %s", nw)
 	}
 	// wrap it in a request and test again
-	req := request.Request{W: writer}
+	req := request.Request{W: writer, Req: &dns.Msg{}}
 	if proto := req.Proto(); proto != "quic" {
 		t.Errorf("Expected Network to be quic but got %s", proto)
+	}
+	// test size
+	if size := req.Size(); size != 65535 {
+		t.Errorf("Expected size to be 65535 but got %d", size)
 	}
 }

@@ -238,6 +238,7 @@ func TestValidRequest(t *testing.T) {
 		name     string
 		setupMsg func() *dns.Msg
 		valid    bool
+		zeroRTT  bool
 	}{
 		{
 			name: "valid request",
@@ -309,12 +310,47 @@ func TestValidRequest(t *testing.T) {
 			},
 			valid: true,
 		},
+		{
+			name: "valid request with 0RTT",
+			setupMsg: func() *dns.Msg {
+				m := new(dns.Msg)
+				m.SetQuestion("example.com.", dns.TypeA)
+				m.Id = 0
+				return m
+			},
+			valid:   true,
+			zeroRTT: true,
+		},
+		{
+			name: "invalid opcode for 0RTT",
+			setupMsg: func() *dns.Msg {
+				m := new(dns.Msg)
+				m.SetQuestion("example.com.", dns.TypeA)
+				m.Id = 0
+				m.Opcode = dns.OpcodeUpdate
+				return m
+			},
+			valid:   false,
+			zeroRTT: true,
+		},
+		{
+			name: "valid opcode for 0RTT",
+			setupMsg: func() *dns.Msg {
+				m := new(dns.Msg)
+				m.SetQuestion("example.com.", dns.TypeA)
+				m.Id = 0
+				m.Opcode = dns.OpcodeNotify
+				return m
+			},
+			valid:   true,
+			zeroRTT: true,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			msg := tt.setupMsg()
-			result := validRequest(msg)
+			result := validRequest(msg, tt.zeroRTT)
 			if result != tt.valid {
 				t.Errorf("validRequest() = %v, want %v", result, tt.valid)
 			}

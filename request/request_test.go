@@ -71,6 +71,12 @@ func TestRequestProto(t *testing.T) {
 	if family != 1 {
 		t.Errorf("Expected family to be 1 (IPv4), got %d", family)
 	}
+	// test tcp
+	st = testRequestWithOption(true)
+	proto = st.Proto()
+	if proto != "tcp" {
+		t.Errorf("Expected proto to be tcp, got %s", proto)
+	}
 }
 
 // TestRequestSizeAndDo tests the SizeAndDo method
@@ -355,12 +361,15 @@ func BenchmarkRequestScrub(b *testing.B) {
 		st.Scrub(reply.Copy())
 	}
 }
-
 func testRequest() Request {
+	return testRequestWithOption(false)
+}
+
+func testRequestWithOption(TCP bool) Request {
 	m := new(dns.Msg)
 	m.SetQuestion("example.com.", dns.TypeA)
 	m.SetEdns0(4096, true)
-	return Request{W: &test.ResponseWriter{}, Req: m}
+	return Request{W: &test.ResponseWriter{TCP: TCP}, Req: m}
 }
 
 func TestRequestClear(t *testing.T) {
