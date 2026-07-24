@@ -3,6 +3,8 @@ package dnsserver
 import (
 	"net"
 	"testing"
+
+	"github.com/coredns/coredns/request"
 )
 
 func TestDoQWriterAddPrefix(t *testing.T) {
@@ -25,8 +27,8 @@ func TestDoQWriter_ResponseWriterMethods(t *testing.T) {
 	remoteAddr := quicAddr{&net.UDPAddr{IP: net.ParseIP("8.8.8.8"), Port: 53}}
 
 	writer := &DoQWriter{
-		localAddr:  quicAddr{localAddr},
-		remoteAddr: quicAddr{remoteAddr},
+		localAddr:  localAddr,
+		remoteAddr: remoteAddr,
 	}
 
 	if err := writer.TsigStatus(); err != nil {
@@ -54,5 +56,23 @@ func TestDoQWriter_ConnectionStateNilConn(t *testing.T) {
 
 	if state := writer.ConnectionState(); state != nil {
 		t.Errorf("ConnectionState() = %v, want nil when conn is unset", state)
+	}
+}
+
+// tests if DoQWriter returns "quic"
+func TestDoQWriter_Proto(t *testing.T) {
+	writer := &DoQWriter{}
+	nw := writer.LocalAddr().Network()
+	if nw != "quic" {
+		t.Errorf("Expected Network to be quic but got %s", nw)
+	}
+	nw = writer.RemoteAddr().Network()
+	if nw != "quic" {
+		t.Errorf("Expected Network to be quic but got %s", nw)
+	}
+	// wrap it in a request and test again
+	req := request.Request{W: writer}
+	if proto := req.Proto(); proto != "quic" {
+		t.Errorf("Expected Network to be quic but got %s", proto)
 	}
 }

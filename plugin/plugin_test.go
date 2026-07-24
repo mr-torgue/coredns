@@ -10,8 +10,7 @@ import (
 
 // mockResponseWriter implements dns.ResponseWriter for testing
 type mockResponseWriter struct {
-	msg      *dns.Msg
-	Protocol string
+	msg *dns.Msg
 }
 
 func (m *mockResponseWriter) LocalAddr() net.Addr {
@@ -26,14 +25,6 @@ func (m *mockResponseWriter) Close() error                { return nil }
 func (m *mockResponseWriter) TsigStatus() error           { return nil }
 func (m *mockResponseWriter) TsigTimersOnly(bool)         {}
 func (m *mockResponseWriter) Hijack()                     {}
-
-// mocking protocol
-func (m *mockResponseWriter) Proto() string {
-	if m.Protocol == "" {
-		return "udp"
-	}
-	return m.Protocol
-}
 
 // mockPluginTracker implements PluginTracker for testing
 type mockPluginTracker struct {
@@ -112,23 +103,6 @@ func TestPluginWriter_NonTracker_NoError(t *testing.T) {
 
 	if mock.msg == nil {
 		t.Error("Expected message to be written")
-	}
-}
-
-func TestPluginWriter_Proto(t *testing.T) {
-	// When the underlying writer doesn't implement PluginTracker,
-	// WriteMsg should still work without error
-	mock := &mockResponseWriter{}
-	pw := &pluginWriter{ResponseWriter: mock, plugin: "notrelevant"}
-	proto := pw.Proto()
-	if proto != "udp" {
-		t.Error("Expected Proto to be udp")
-	}
-
-	pw = &pluginWriter{ResponseWriter: &mockResponseWriter{Protocol: "quic"}, plugin: "notrelevant"}
-	proto = pw.Proto()
-	if proto != "quic" {
-		t.Error("Expected Proto to be quic")
 	}
 }
 
