@@ -3,6 +3,9 @@ package dnsserver
 import (
 	"net"
 	"testing"
+
+	"github.com/mr-torgue/coredns/request"
+	"github.com/mr-torgue/dns"
 )
 
 func TestDoQWriterAddPrefix(t *testing.T) {
@@ -21,8 +24,8 @@ func TestDoQWriterAddPrefix(t *testing.T) {
 }
 
 func TestDoQWriter_ResponseWriterMethods(t *testing.T) {
-	localAddr := &net.UDPAddr{IP: net.ParseIP("127.0.0.1"), Port: 1234}
-	remoteAddr := &net.UDPAddr{IP: net.ParseIP("8.8.8.8"), Port: 53}
+	localAddr := quicAddr{&net.UDPAddr{IP: net.ParseIP("127.0.0.1"), Port: 1234}}
+	remoteAddr := quicAddr{&net.UDPAddr{IP: net.ParseIP("8.8.8.8"), Port: 53}}
 
 	writer := &DoQWriter{
 		localAddr:  localAddr,
@@ -54,5 +57,27 @@ func TestDoQWriter_ConnectionStateNilConn(t *testing.T) {
 
 	if state := writer.ConnectionState(); state != nil {
 		t.Errorf("ConnectionState() = %v, want nil when conn is unset", state)
+	}
+}
+
+// tests if DoQWriter returns "quic"
+func TestDoQWriter_Proto(t *testing.T) {
+	writer := &DoQWriter{}
+	nw := writer.LocalAddr().Network()
+	if nw != "quic" {
+		t.Errorf("Expected Network to be quic but got %s", nw)
+	}
+	nw = writer.RemoteAddr().Network()
+	if nw != "quic" {
+		t.Errorf("Expected Network to be quic but got %s", nw)
+	}
+	// wrap it in a request and test again
+	req := request.Request{W: writer, Req: &dns.Msg{}}
+	if proto := req.Proto(); proto != "quic" {
+		t.Errorf("Expected Network to be quic but got %s", proto)
+	}
+	// test size
+	if size := req.Size(); size != 65535 {
+		t.Errorf("Expected size to be 65535 but got %d", size)
 	}
 }
