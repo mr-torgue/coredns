@@ -50,8 +50,8 @@ require (
 
 require (
 	github.com/hashicorp/golang-lru/v2 v2.0.7
-	github.com/mr-torgue/dns v1.1.4
-	github.com/mr-torgue/go-openssl v1.0.1
+	github.com/mr-torgue/dns v1.1.5
+	github.com/mr-torgue/go-openssl v1.0.2
 	github.com/pires/go-proxyproto v0.12.0
 	github.com/prometheus/exporter-toolkit v0.16.0
 	golang.org/x/net v0.54.0
