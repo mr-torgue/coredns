@@ -123,6 +123,16 @@ func TestCacheInsertion(t *testing.T) {
 			shouldCache: true,
 		},
 		{
+			name: "test dns.RcodeNameError without SOA does not cache",
+			in: test.Case{
+				Rcode:              dns.RcodeNameError,
+				Qname:              "1.1.168.192.in-addr.arpa.",
+				Qtype:              dns.TypePTR,
+				RecursionAvailable: true,
+			},
+			shouldCache: false,
+		},
+		{
 			name: "test dns.RcodeServerFailure cache",
 			out: test.Case{
 				Rcode: dns.RcodeServerFailure,
@@ -359,6 +369,27 @@ func TestCacheZeroTTL(t *testing.T) {
 	}
 	if c.ncache.Len() != 0 {
 		t.Errorf("Msg with 0 TTL should not have been cached")
+	}
+}
+
+func TestCacheHonorsConfiguredPositiveMaxTTLAboveDefault(t *testing.T) {
+	c := New()
+	c.pttl = 2 * time.Hour
+	c.minpttl = 0
+	c.Next = ttlBackend(24 * 60 * 60)
+
+	req := new(dns.Msg)
+	req.SetQuestion("example.org.", dns.TypeA)
+
+	rec := dnstest.NewRecorder(&test.ResponseWriter{})
+	c.ServeDNS(context.TODO(), rec, req)
+
+	if rec.Msg == nil || len(rec.Msg.Answer) == 0 {
+		t.Fatalf("expected answer, got %+v", rec.Msg)
+	}
+
+	if got, want := rec.Msg.Answer[0].Header().Ttl, uint32(7200); got != want {
+		t.Fatalf("expected TTL %d, got %d", want, got)
 	}
 }
 
@@ -1041,7 +1072,7 @@ func TestServfailDoesNotShadowPositiveCache(t *testing.T) {
 	posMsg.Response = true
 	posMsg.Answer = []dns.RR{test.A("example.org. 120 IN A 127.0.0.53")}
 	posItem := newItem(posMsg, now.Add(-30*time.Second), 120*time.Second)
-	k := hash("example.org.", dns.TypeA, false, false)
+	k := hash("example.org.", dns.TypeA, dns.ClassINET, false, false)
 	c.pcache.Add(k, posItem)
 
 	// Manually insert a SERVFAIL entry in ncache (stored just now, TTL 5s).

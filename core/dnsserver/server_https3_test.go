@@ -73,6 +73,30 @@ func TestCustomHTTP3RequestValidator(t *testing.T) {
 	}
 }
 
+func TestServerHTTPS3RejectsUpdate(t *testing.T) {
+	handler := new(updateResponsePlugin)
+	config := testConfig("https3", handler)
+	config.TLSConfig = &tls.Config{}
+
+	server, err := NewServerHTTPS3("127.0.0.1:443", []*Config{config})
+	if err != nil {
+		t.Fatalf("NewServerHTTPS3() failed: %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodPost, "/dns-query", bytes.NewReader(mustPackRFC2136Update(t)))
+	req.RemoteAddr = "127.0.0.1:12345"
+	recorder := httptest.NewRecorder()
+
+	server.ServeHTTP(recorder, req)
+
+	if recorder.Code != http.StatusBadRequest {
+		t.Fatalf("ServeHTTP() status = %d, want %d", recorder.Code, http.StatusBadRequest)
+	}
+	if handler.called.Load() {
+		t.Fatal("RFC 2136 UPDATE reached the plugin chain")
+	}
+}
+
 func TestNewServerHTTPS3WithCustomLimits(t *testing.T) {
 	maxStreams := 50
 	c := Config{
@@ -345,5 +369,40 @@ func TestServeHTTP3AcceptsValidTSIG(t *testing.T) {
 
 	if resp.Rcode != dns.RcodeSuccess {
 		t.Fatalf("expected NOERROR response from plugin, got %s", dns.RcodeToString[resp.Rcode])
+	}
+}
+
+func TestServeHTTP3DoesNotLeakBodyReadError(t *testing.T) {
+	c := Config{
+		Zone:        "example.com.",
+		Transport:   "https",
+		TLSConfig:   &tls.Config{},
+		ListenHosts: []string{"127.0.0.1"},
+		Port:        "443",
+	}
+	s, err := NewServerHTTPS3("127.0.0.1:443", []*Config{&c})
+	if err != nil {
+		t.Fatal("could not create HTTPS3 server:", err)
+	}
+
+	r := httptest.NewRequest(http.MethodPost, "/dns-query", errReader{})
+	r.RemoteAddr = "127.0.0.1:12345"
+	w := httptest.NewRecorder()
+
+	s.ServeHTTP(w, r)
+
+	res := w.Result()
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, res.StatusCode)
+	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.TrimSpace(string(body)); got != "invalid request" {
+		t.Fatalf("expected sanitized body %q, got %q", "invalid request", got)
 	}
 }

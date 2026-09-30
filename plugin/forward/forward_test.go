@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -236,5 +237,113 @@ func TestForward_NextOnNodata(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestForwardFailoverStopsAfterAllUpstreams(t *testing.T) {
+	var first atomic.Int32
+	var second atomic.Int32
+
+	s1 := dnstest.NewMultipleServer(func(w dns.ResponseWriter, r *dns.Msg) {
+		first.Add(1)
+
+		m := new(dns.Msg)
+		m.SetRcode(r, dns.RcodeServerFailure)
+		w.WriteMsg(m)
+	})
+	defer s1.Close()
+
+	s2 := dnstest.NewMultipleServer(func(w dns.ResponseWriter, r *dns.Msg) {
+		second.Add(1)
+
+		m := new(dns.Msg)
+		m.SetRcode(r, dns.RcodeServerFailure)
+		w.WriteMsg(m)
+	})
+	defer s2.Close()
+
+	c := caddy.NewTestController("dns", fmt.Sprintf(`forward . %s %s {
+		policy sequential
+		failover SERVFAIL
+	}`, s1.Addr, s2.Addr))
+
+	fs, err := parseForward(c)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	f := fs[0]
+	if err := f.OnStartup(); err != nil {
+		t.Fatal(err)
+	}
+	defer f.OnShutdown()
+
+	req := new(dns.Msg)
+	req.SetQuestion("example.org.", dns.TypeA)
+
+	rec := dnstest.NewRecorder(&test.ResponseWriter{})
+
+	ctx, cancel := context.WithTimeout(
+		context.Background(),
+		200*time.Millisecond,
+	)
+	defer cancel()
+
+	if _, err := f.ServeDNS(ctx, rec, req); err != nil {
+		t.Fatalf("Expected the last SERVFAIL response, got error: %v", err)
+	}
+
+	if rec.Rcode != dns.RcodeServerFailure {
+		t.Fatalf("Expected SERVFAIL, got %d", rec.Rcode)
+	}
+
+	if got := first.Load(); got != 1 {
+		t.Errorf("Expected first upstream to be queried once, got %d", got)
+	}
+	if got := second.Load(); got != 1 {
+		t.Errorf("Expected second upstream to be queried once, got %d", got)
+	}
+}
+
+func TestForwardDoesNotRetryLocalPackError(t *testing.T) {
+	req := new(dns.Msg)
+	req.SetQuestion("example.org.", dns.TypeA)
+	req.Answer = []dns.RR{&dns.TXT{
+		Hdr: dns.RR_Header{
+			Name:   "example.org.",
+			Rrtype: dns.TypeTXT,
+			Class:  dns.ClassINET,
+		},
+		// A TXT character-string is limited to 255 wire bytes. This is a
+		// deterministic local serialization error and is unrelated to HIP or
+		// compression-pointer handling in miekg/dns.
+		Txt: []string{strings.Repeat("x", 256)},
+	}}
+
+	f := New()
+	f.maxfails = 0
+	f.maxConnectAttempts = 2
+	f.opts.ForceTCP = true
+	f.proxies = []*proxy.Proxy{
+		proxy.NewProxy("forward", "127.0.0.1:1", transport.DNS),
+	}
+
+	tracer := mocktracer.New()
+	span := tracer.StartSpan("test")
+	ctx := opentracing.ContextWithSpan(context.Background(), span)
+
+	rcode, err := f.ServeDNS(ctx, &mockResponseWriter{}, req)
+	if rcode != dns.RcodeFormatError {
+		t.Fatalf("expected FORMERR, got %s", dns.RcodeToString[rcode])
+	}
+	if err == nil || !strings.Contains(err.Error(), "string exceeded 255 bytes in txt") {
+		t.Fatalf("expected local TXT packing error, got %v", err)
+	}
+
+	// ServeDNS starts one child span for each forwarding attempt. A local
+	// packing failure must stop after the first attempt even though the normal
+	// connect-attempt limit permits two attempts.
+	if got := len(tracer.FinishedSpans()); got != 1 {
+		t.Fatalf("expected one forwarding attempt, got %d", got)
 	}
 }

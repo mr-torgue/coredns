@@ -1,6 +1,7 @@
 package proxyproto
 
 import (
+	"net"
 	"strings"
 	"testing"
 	"time"
@@ -82,5 +83,34 @@ func TestSetup(t *testing.T) {
 				t.Errorf("Test %d: Expected error to contain: %v, found error: %v, input: %s", i, test.expectedErrContent, err, test.input)
 			}
 		}
+	}
+}
+
+func TestDefaultPolicyWithoutAllow(t *testing.T) {
+	c := caddy.NewTestController(
+		"dns",
+		"proxyproto {\ndefault reject\n}",
+	)
+
+	if err := setup(c); err != nil {
+		t.Fatal(err)
+	}
+
+	cfg := dnsserver.GetConfig(c)
+
+	policy, err := cfg.ProxyProtoConnPolicy(
+		proxyprotoLib.ConnPolicyOptions{
+			Upstream: &net.TCPAddr{
+				IP:   net.ParseIP("192.0.2.1"),
+				Port: 53,
+			},
+		},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if policy != proxyprotoLib.REJECT {
+		t.Fatalf("Expected REJECT, got %v", policy)
 	}
 }

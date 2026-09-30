@@ -2,6 +2,7 @@ package doh
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"fmt"
 	"io"
@@ -23,6 +24,10 @@ const Path = "/dns-query"
 // be prefixed with https:// by default, unless it's already prefixed with
 // either http:// or https://.
 func NewRequest(method, url string, m *dns.Msg) (*http.Request, error) {
+	return NewRequestWithContext(context.Background(), method, url, m)
+}
+
+func NewRequestWithContext(ctx context.Context, method, url string, m *dns.Msg) (*http.Request, error) {
 	buf, err := m.Pack()
 	if err != nil {
 		return nil, err
@@ -36,7 +41,8 @@ func NewRequest(method, url string, m *dns.Msg) (*http.Request, error) {
 	case http.MethodGet:
 		b64 := base64.RawURLEncoding.EncodeToString(buf)
 
-		req, err := http.NewRequest(
+		req, err := http.NewRequestWithContext(
+			ctx,
 			http.MethodGet,
 			fmt.Sprintf("%s%s?dns=%s", url, Path, b64),
 			nil,
@@ -50,7 +56,8 @@ func NewRequest(method, url string, m *dns.Msg) (*http.Request, error) {
 		return req, nil
 
 	case http.MethodPost:
-		req, err := http.NewRequest(
+		req, err := http.NewRequestWithContext(
+			ctx,
 			http.MethodPost,
 			fmt.Sprintf("%s%s", url, Path),
 			bytes.NewReader(buf),
@@ -99,7 +106,12 @@ func RequestToMsgWire(req *http.Request) (*dns.Msg, []byte, error) {
 // requestToMsgPost extracts the dns message from the request body.
 func requestToMsgPost(req *http.Request) (*dns.Msg, []byte, error) {
 	defer req.Body.Close()
-	return toMsgWire(req.Body)
+	buf, err := io.ReadAll(http.MaxBytesReader(nil, req.Body, maxDNSQuerySize))
+	if err != nil {
+		return nil, nil, err
+	}
+	m, err := dnsutil.UnpackRequest(buf)
+	return m, buf, err
 }
 
 const maxDNSQuerySize = 65536
@@ -142,9 +154,7 @@ func base64ToMsgWire(b64 string) (*dns.Msg, []byte, error) {
 		return nil, nil, err
 	}
 
-	m := new(dns.Msg)
-	err = m.Unpack(buf)
-
+	m, err := dnsutil.UnpackRequest(buf)
 	return m, buf, err
 }
 

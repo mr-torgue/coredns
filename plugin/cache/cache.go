@@ -90,14 +90,27 @@ func key(qname string, m *dns.Msg, t response.Type, do, cd bool) (bool, uint64) 
 	if t == response.OtherError || t == response.Meta || t == response.Update {
 		return false, 0
 	}
+	// Negative caching requires an SOA record to determine the denial TTL.
+	if t == response.NameError && !hasSOA(m) {
+		return false, 0
+	}
 
-	return true, hash(qname, m.Question[0].Qtype, do, cd)
+	return true, hash(qname, m.Question[0].Qtype, m.Question[0].Qclass, do, cd)
+}
+
+func hasSOA(m *dns.Msg) bool {
+	for _, r := range m.Ns {
+		if r.Header().Rrtype == dns.TypeSOA {
+			return true
+		}
+	}
+	return false
 }
 
 var one = []byte("1")
 var zero = []byte("0")
 
-func hash(qname string, qtype uint16, do, cd bool) uint64 {
+func hash(qname string, qtype, qclass uint16, do, cd bool) uint64 {
 	h := fnv.New64()
 
 	if do {
@@ -115,6 +128,9 @@ func hash(qname string, qtype uint16, do, cd bool) uint64 {
 	var qtypeBytes [2]byte
 	binary.BigEndian.PutUint16(qtypeBytes[:], qtype)
 	h.Write(qtypeBytes[:])
+	var qclassBytes [2]byte
+	binary.BigEndian.PutUint16(qclassBytes[:], qclass)
+	h.Write(qclassBytes[:])
 	h.Write([]byte(qname))
 	return h.Sum64()
 }
@@ -221,14 +237,15 @@ func (w *ResponseWriter) WriteMsg(res *dns.Msg) error {
 	// key returns empty string for anything we don't want to cache.
 	hasKey, key := key(w.state.Name(), res, mt, w.do, w.cd)
 
-	msgTTL := dnsutil.MinimalTTL(res, mt)
 	var duration time.Duration
 	switch mt {
 	case response.NameError, response.NoData:
+		msgTTL := dnsutil.MinimalTTLWithMaximum(res, mt, w.nttl)
 		duration = computeTTL(msgTTL, w.minnttl, w.nttl)
 	case response.ServerError:
 		duration = w.failttl
 	default:
+		msgTTL := dnsutil.MinimalTTLWithMaximum(res, mt, w.pttl)
 		duration = computeTTL(msgTTL, w.minpttl, w.pttl)
 	}
 

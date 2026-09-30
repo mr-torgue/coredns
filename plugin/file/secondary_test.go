@@ -3,9 +3,11 @@ package file
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
 	"github.com/mr-torgue/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/transfer"
 	"github.com/mr-torgue/coredns/request"
 
 	"github.com/mr-torgue/dns"
@@ -121,6 +123,27 @@ func TestTransferIn(t *testing.T) {
 	}
 }
 
+func TestUpdateStopsBeforeInitialTransfer(t *testing.T) {
+	z := NewZone(testZone, "test")
+	updateShutdown := make(chan bool)
+	done := make(chan struct{})
+
+	go func() {
+		if err := z.Update(updateShutdown, nil); err != nil {
+			t.Errorf("Unexpected update error: %v", err)
+		}
+		close(done)
+	}()
+
+	close(updateShutdown)
+
+	select {
+	case <-done:
+	case <-time.After(200 * time.Millisecond):
+		t.Fatal("Update did not stop while waiting for initial SOA")
+	}
+}
+
 func TestIsNotify(t *testing.T) {
 	z := new(Zone)
 	z.origin = testZone
@@ -143,4 +166,24 @@ func newRequest(_zone string, _qtype uint16) request.Request {
 	m.SetQuestion("example.com.", dns.TypeA)
 	m.SetEdns0(4097, true)
 	return request.Request{W: &test.ResponseWriter{}, Req: m}
+}
+
+func TestUpdateWithZeroSOATimers(t *testing.T) {
+	z := NewZone(testZone, "test")
+	z.SOA = test.SOA(
+		fmt.Sprintf("%s IN SOA bla. bla. 1 0 0 0 0", testZone),
+	)
+
+	updateShutdown := make(chan bool)
+	time.AfterFunc(10*time.Millisecond, func() {
+		close(updateShutdown)
+	})
+
+	if err := z.UpdateWithTransfer(
+		updateShutdown,
+		nil,
+		func(*Zone, *transfer.Transfer) error { return nil },
+	); err != nil {
+		t.Fatalf("Unexpected update error: %v", err)
+	}
 }

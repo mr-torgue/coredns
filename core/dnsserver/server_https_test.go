@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+	"encoding/base64"
+	"errors"
 	"io"
 	"net"
 	"net/http"
@@ -76,6 +78,42 @@ func TestCustomHTTPRequestValidator(t *testing.T) {
 				t.Error("unexpected HTTP code", res.StatusCode)
 			}
 			res.Body.Close()
+		})
+	}
+}
+
+func TestServerHTTPSRejectsUpdate(t *testing.T) {
+	for _, method := range []string{http.MethodGet, http.MethodPost} {
+		t.Run(method, func(t *testing.T) {
+			handler := new(updateResponsePlugin)
+			config := testConfig("https", handler)
+			config.TLSConfig = &tls.Config{}
+
+			server, err := NewServerHTTPS("127.0.0.1:443", []*Config{config})
+			if err != nil {
+				t.Fatalf("NewServerHTTPS() failed: %v", err)
+			}
+
+			wire := mustPackRFC2136Update(t)
+			target := "/dns-query"
+			var body io.Reader
+			if method == http.MethodGet {
+				target += "?dns=" + base64.RawURLEncoding.EncodeToString(wire)
+			} else {
+				body = bytes.NewReader(wire)
+			}
+			req := httptest.NewRequest(method, target, body)
+			req.RemoteAddr = "127.0.0.1:12345"
+			recorder := httptest.NewRecorder()
+
+			server.ServeHTTP(recorder, req)
+
+			if recorder.Code != http.StatusBadRequest {
+				t.Fatalf("ServeHTTP() status = %d, want %d", recorder.Code, http.StatusBadRequest)
+			}
+			if handler.called.Load() {
+				t.Fatal("RFC 2136 UPDATE reached the plugin chain")
+			}
 		})
 	}
 }
@@ -196,7 +234,7 @@ func TestDoHWriterLaddrFromConnContext(t *testing.T) {
 	ppDst := &net.TCPAddr{IP: net.ParseIP("10.0.0.1"), Port: 443}
 
 	r := httptest.NewRequest(http.MethodPost, "/dns-query", io.NopCloser(bytes.NewReader(buf)))
-	ctx := context.WithValue(r.Context(), connAddrKey{}, ppDst)
+	ctx := context.WithValue(r.Context(), http.LocalAddrContextKey, ppDst)
 	r = r.WithContext(ctx)
 	w := httptest.NewRecorder()
 
@@ -230,7 +268,7 @@ func TestDoHWriterLaddrFallback(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// No connAddrKey in context; should fall back to s.listenAddr.
+	// No LocalAddrContextKey in context; should fall back to s.listenAddr.
 	r := httptest.NewRequest(http.MethodPost, "/dns-query", io.NopCloser(bytes.NewReader(buf)))
 	w := httptest.NewRecorder()
 
@@ -581,5 +619,46 @@ func TestDoHWriterTsigStatusReturnsStoredStatus(t *testing.T) {
 	dw := &DoHWriter{tsigStatus: dns.ErrSecret}
 	if dw.TsigStatus() != dns.ErrSecret {
 		t.Fatal("expected TsigStatus to return stored tsigStatus")
+	}
+}
+
+type errReader struct{}
+
+const leakyBodyReadError = "read tcp 10.0.0.1:5443->10.0.0.2:48418: i/o timeout"
+
+func (errReader) Read([]byte) (int, error) { return 0, errors.New(leakyBodyReadError) }
+
+func TestServeHTTPDoesNotLeakBodyReadError(t *testing.T) {
+	c := Config{
+		Zone:        "example.com.",
+		Transport:   "https",
+		TLSConfig:   &tls.Config{},
+		ListenHosts: []string{"127.0.0.1"},
+		Port:        "443",
+	}
+	s, err := NewServerHTTPS("127.0.0.1:443", []*Config{&c})
+	if err != nil {
+		t.Fatal("could not create HTTPS server:", err)
+	}
+
+	r := httptest.NewRequest(http.MethodPost, "/dns-query", errReader{})
+	r.RemoteAddr = "127.0.0.1:12345"
+	w := httptest.NewRecorder()
+
+	s.ServeHTTP(w, r)
+
+	res := w.Result()
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, res.StatusCode)
+	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.TrimSpace(string(body)); got != "invalid request" {
+		t.Fatalf("expected sanitized body %q, got %q", "invalid request", got)
 	}
 }

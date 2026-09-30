@@ -13,6 +13,7 @@ import (
 	"github.com/mr-torgue/coredns/plugin/metrics/vars"
 	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
 	"github.com/mr-torgue/coredns/plugin/pkg/doh"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 	cproxyproto "github.com/mr-torgue/coredns/plugin/pkg/proxyproto"
 	"github.com/mr-torgue/coredns/plugin/pkg/response"
 	"github.com/mr-torgue/coredns/plugin/pkg/reuseport"
@@ -178,7 +179,8 @@ func (s *ServerHTTPS3) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	msg, raw, err := doh.RequestToMsgWire(r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		clog.Debugf("DoH3 request could not be parsed: %v", err)
+		http.Error(w, "invalid request", http.StatusBadRequest)
 		s.countResponse(http.StatusBadRequest)
 		return
 	}
@@ -216,7 +218,7 @@ func (s *ServerHTTPS3) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	buf, _ := dw.Msg.Pack()
 	mt, _ := response.Typify(dw.Msg, time.Now().UTC())
-	age := dnsutil.MinimalTTL(dw.Msg, mt)
+	age := dnsutil.MinimalTTLWithMaximum(dw.Msg, mt, dnsutil.MaximumDefaultTTL)
 
 	w.Header().Set("Content-Type", doh.MimeType)
 	w.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", uint32(age.Seconds())))
