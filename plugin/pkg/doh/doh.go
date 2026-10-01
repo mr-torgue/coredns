@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
 	"github.com/mr-torgue/dns"
 )
 

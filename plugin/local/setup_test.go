@@ -6,6 +6,9 @@ import (
 
 	"github.com/coredns/caddy"
 	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
+
+	"github.com/mr-torgue/dns"
 )
 
 func TestSetup(t *testing.T) {

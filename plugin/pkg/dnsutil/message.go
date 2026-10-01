@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 var errRequestRejected = errors.New("dns request rejected")

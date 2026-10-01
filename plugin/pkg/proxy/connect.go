@@ -15,6 +15,8 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/mr-torgue/coredns/plugin/pkg/doh"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 	"github.com/mr-torgue/coredns/request"
 
 	"github.com/mr-torgue/dns"

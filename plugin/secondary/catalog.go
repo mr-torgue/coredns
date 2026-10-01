@@ -1,12 +1,12 @@
 package secondary
 
 import (
-	"github.com/coredns/coredns/plugin/file"
-	"github.com/coredns/coredns/plugin/pkg/catalog"
-	"github.com/coredns/coredns/plugin/pkg/upstream"
-	"github.com/coredns/coredns/plugin/transfer"
+	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/pkg/catalog"
+	"github.com/mr-torgue/coredns/plugin/pkg/upstream"
+	"github.com/mr-torgue/coredns/plugin/transfer"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func (s *Secondary) transferIn(origin string, z *file.Zone, t *transfer.Transfer) error {

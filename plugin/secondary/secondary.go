@@ -4,8 +4,8 @@ package secondary
 import (
 	"sync"
 
-	"github.com/coredns/coredns/plugin/pkg/catalog"
 	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/pkg/catalog"
 )
 
 // Secondary implements a secondary plugin that allows CoreDNS to retrieve (via AXFR)

@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/file"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/pkg/fall"
-	plugintest "github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/pkg/fall"
+	plugintest "github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestTransferInCatalog(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Version is the RFC 9432 catalog zone schema version supported by this package.

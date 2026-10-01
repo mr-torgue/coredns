@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/plugin/pkg/catalog"
 	"github.com/mr-torgue/coredns/core/dnsserver"
 	"github.com/mr-torgue/coredns/plugin"
 	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/pkg/catalog"
 	"github.com/mr-torgue/coredns/plugin/pkg/fall"
 	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 	"github.com/mr-torgue/coredns/plugin/pkg/parse"

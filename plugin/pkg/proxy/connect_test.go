@@ -7,12 +7,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/doh"
-	"github.com/coredns/coredns/plugin/pkg/transport"
-	"github.com/coredns/coredns/plugin/test"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/pkg/doh"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
+	"github.com/mr-torgue/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const (

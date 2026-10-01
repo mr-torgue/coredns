@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mr-torgue/coredns/plugin"
 	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
 	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 	"github.com/mr-torgue/coredns/plugin/pkg/replacer"

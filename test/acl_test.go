@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestCacheACLAuthorization(t *testing.T) {

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/mr-torgue/coredns/plugin/metrics/vars"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
 	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 	cproxyproto "github.com/mr-torgue/coredns/plugin/pkg/proxyproto"
 	"github.com/mr-torgue/coredns/plugin/pkg/reuseport"

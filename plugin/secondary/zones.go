@@ -1,8 +1,8 @@
 package secondary
 
 import (
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/file"
 )
 
 func (s *Secondary) lookupZone(qname string) (string, *file.Zone, bool) {

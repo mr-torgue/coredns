@@ -8,6 +8,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/mr-torgue/coredns/plugin/pkg/doh"
 	"github.com/mr-torgue/coredns/plugin/pkg/log"
 	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 

@@ -9,6 +9,7 @@ import (
 
 	"github.com/coredns/caddy"
 	"github.com/mr-torgue/coredns/pb"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnsutil"
 	"github.com/mr-torgue/coredns/plugin/pkg/reuseport"
 	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 

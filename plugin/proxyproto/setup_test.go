@@ -8,6 +8,8 @@ import (
 
 	"github.com/coredns/caddy"
 	"github.com/mr-torgue/coredns/core/dnsserver"
+
+	proxyprotoLib "github.com/pires/go-proxyproto"
 )
 
 func TestSetup(t *testing.T) {

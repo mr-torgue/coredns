@@ -8,6 +8,7 @@ import (
 
 	"github.com/coredns/caddy"
 	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/pkg/doh"
 	"github.com/mr-torgue/coredns/plugin/test"
 
 	"github.com/mr-torgue/dns"

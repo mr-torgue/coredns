@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestNotifyClientSource(t *testing.T) {

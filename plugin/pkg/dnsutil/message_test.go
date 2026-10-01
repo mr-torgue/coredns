@@ -3,7 +3,7 @@ package dnsutil
 import (
 	"testing"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestUnpackRequest(t *testing.T) {

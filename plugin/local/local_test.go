@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/mr-torgue/coredns/plugin"
 	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
 	"github.com/mr-torgue/coredns/plugin/test"
 

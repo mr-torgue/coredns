@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/doh"
 	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/pkg/doh"
 	"github.com/mr-torgue/coredns/plugin/pkg/transport"
 
 	"github.com/mr-torgue/dns"

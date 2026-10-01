@@ -1,6 +1,6 @@
 package hosts
 
-import "github.com/miekg/dns"
+import "github.com/mr-torgue/dns"
 
 // isWildcardName reports whether name is a wildcard owner name (*.example.com.).
 func isWildcardName(name string) bool {
