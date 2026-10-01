@@ -3,10 +3,10 @@ package test
 import (
 	"testing"
 
-	"github.com/coredns/coredns/plugin/metrics"
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/metrics"
+	"github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // TestShed checks that with the shed plugin installed a query is answered

@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/core/dnsserver"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // chanWriter hands each written payload to a channel — the race-safe way to

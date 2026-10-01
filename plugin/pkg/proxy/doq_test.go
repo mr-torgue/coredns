@@ -18,10 +18,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/transport"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/pkg/transport"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/quic-go/quic-go"
 )
 
@@ -176,12 +176,12 @@ func makeDoQTestTLSConfigs(t *testing.T) (*tls.Config, *tls.Config) {
 	}
 	roots.AddCert(parsed)
 	return &tls.Config{
-		Certificates: []tls.Certificate{cert},
-		NextProtos:   []string{doqALPN},
-	}, &tls.Config{
-		RootCAs:    roots,
-		ServerName: "doq.test",
-	}
+			Certificates: []tls.Certificate{cert},
+			NextProtos:   []string{doqALPN},
+		}, &tls.Config{
+			RootCAs:    roots,
+			ServerName: "doq.test",
+		}
 }
 
 func writeDoQTestResponse(stream *quic.Stream, response *dns.Msg) error {

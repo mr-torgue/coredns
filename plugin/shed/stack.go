@@ -4,9 +4,9 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/coredns/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/core/dnsserver"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

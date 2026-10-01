@@ -3,7 +3,7 @@ package kubernetes
 import (
 	"testing"
 
-	"github.com/coredns/coredns/plugin/kubernetes/object"
+	"github.com/mr-torgue/coredns/plugin/kubernetes/object"
 
 	mcs "sigs.k8s.io/mcs-api/pkg/apis/v1alpha1"
 )

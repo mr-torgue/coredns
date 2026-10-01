@@ -14,11 +14,11 @@ import (
 	"context"
 	"sync"
 
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

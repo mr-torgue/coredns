@@ -7,12 +7,12 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/metrics"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/test"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/metrics"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"github.com/prometheus/client_golang/prometheus/testutil"
 )
 

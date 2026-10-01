@@ -3,7 +3,7 @@ package dynupdate
 import (
 	"fmt"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const (

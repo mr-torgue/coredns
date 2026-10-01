@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestKeyForConfig(t *testing.T) {

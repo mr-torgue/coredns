@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	plugintest "github.com/coredns/coredns/plugin/test"
+	plugintest "github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const (

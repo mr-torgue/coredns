@@ -16,7 +16,7 @@ import (
 	"github.com/mr-torgue/coredns/plugin/pkg/fall"
 	"github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const dbRelative = `@ 500 IN SOA ns.example. hostmaster.example. 3 3600 600 86400 300

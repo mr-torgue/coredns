@@ -18,7 +18,7 @@ import (
 	"github.com/letsencrypt/pebble/v2/db"
 	"github.com/letsencrypt/pebble/v2/va"
 	"github.com/letsencrypt/pebble/v2/wfe"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestACMEDNS01CertificateManagement(t *testing.T) {

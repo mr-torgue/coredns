@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	coretest "github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	coretest "github.com/mr-torgue/coredns/plugin/test"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // BenchmarkUpdate measures a bounded, changing zone rather than duplicate

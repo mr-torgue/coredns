@@ -3,9 +3,9 @@ package test
 import (
 	"testing"
 
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // TestSIITAfterForward is a regression test for the plugin.cfg ordering bug:

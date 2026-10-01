@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	clog "github.com/coredns/coredns/plugin/pkg/log"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 )
 
 func newTestLoggerAdapter(buf *bytes.Buffer) *loggerAdapter {

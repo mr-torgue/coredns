@@ -17,7 +17,7 @@ import (
 
 	"github.com/coredns/caddy"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func persistentDynUpdateConfig(t *testing.T, network string) (corefile, seed string) {

@@ -11,13 +11,13 @@ import (
 	"testing"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	coretest "github.com/coredns/coredns/plugin/test"
-	"github.com/coredns/coredns/plugin/transfer"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	coretest "github.com/mr-torgue/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/transfer"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const (

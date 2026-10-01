@@ -13,13 +13,13 @@ import (
 	"time"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin"
-	_ "github.com/coredns/coredns/plugin/bind"
-	_ "github.com/coredns/coredns/plugin/forward"
-	_ "github.com/coredns/coredns/plugin/whoami"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
+	_ "github.com/mr-torgue/coredns/plugin/bind"
+	_ "github.com/mr-torgue/coredns/plugin/forward"
+	_ "github.com/mr-torgue/coredns/plugin/whoami"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Register once, but outside init, as an embedding host would do before Start.

@@ -16,6 +16,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.20.0
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.70.0
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.50.0
+	github.com/caddyserver/certmagic v0.25.4
 	github.com/coredns/caddy v1.1.4
 	github.com/dnstap/golang-dnstap v0.4.0
 	github.com/expr-lang/expr v1.17.8
@@ -25,22 +26,27 @@ require (
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/hashicorp/nomad/api v0.0.0-20250909143645-a3b86c697f38 // v1.10.5
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
+	github.com/letsencrypt/pebble/v2 v2.10.1
+	github.com/mholt/acmez/v3 v3.1.6
 	github.com/mr-torgue/dns v1.1.6
 	github.com/mr-torgue/go-openssl v1.0.2
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/openzipkin-contrib/zipkin-go-opentracing v0.5.0
 	github.com/openzipkin/zipkin-go v0.4.3
 	github.com/oschwald/geoip2-golang/v2 v2.4.0
+	github.com/pires/go-proxyproto v0.15.0
 	github.com/prometheus/client_golang v1.24.1
 	github.com/prometheus/client_model v0.6.3
 	github.com/prometheus/common v0.71.0
+	github.com/prometheus/exporter-toolkit v0.19.0
 	github.com/quic-go/quic-go v0.63.0
 	github.com/stretchr/testify v1.12.1
 	go.etcd.io/bbolt v1.5.0
 	go.etcd.io/etcd/api/v3 v3.7.2
 	go.etcd.io/etcd/client/v3 v3.7.2
 	go.uber.org/automaxprocs v1.6.0
-	golang.org/x/crypto v0.57.0
+	go.uber.org/zap v1.28.0
+	golang.org/x/net v0.59.0
 	golang.org/x/sys v0.48.0
 	google.golang.org/api v0.299.0
 	google.golang.org/grpc v1.84.0
@@ -50,17 +56,6 @@ require (
 	k8s.io/client-go v0.37.0
 	k8s.io/klog/v2 v2.140.0
 	sigs.k8s.io/mcs-api v0.5.2
-)
-
-require (
-	github.com/caddyserver/certmagic v0.25.4
-	github.com/hashicorp/golang-lru/v2 v2.0.7
-	github.com/letsencrypt/pebble/v2 v2.10.1
-	github.com/mholt/acmez/v3 v3.1.6
-	github.com/pires/go-proxyproto v0.15.0
-	github.com/prometheus/exporter-toolkit v0.19.0
-	go.uber.org/zap v1.28.0
-	golang.org/x/net v0.59.0
 )
 
 require (
@@ -157,9 +152,10 @@ require (
 	github.com/libdns/libdns v1.1.1 // indirect
 	github.com/linkdata/deadlock v0.5.5 // indirect
 	github.com/lufia/plan9stats v0.0.0-20260330125221-c963978e514e // indirect
+	github.com/mattn/go-pointer v0.0.1 // indirect
 	github.com/mdlayher/socket v0.6.0 // indirect
 	github.com/mdlayher/vsock v1.3.0 // indirect
-	github.com/miekg/dns v1.1.31 // indirect
+	github.com/miekg/dns v1.1.72 // indirect
 	github.com/minio/simdjson-go v0.4.5 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.1-0.20231216201459-8508981c8b6c // indirect
@@ -181,6 +177,7 @@ require (
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/secure-systems-lab/go-securesystemslib v0.11.0 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.6 // indirect
+	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/tinylib/msgp v1.6.4 // indirect
 	github.com/tklauser/go-sysconf v0.3.16 // indirect
@@ -206,6 +203,7 @@ require (
 	go.uber.org/zap/exp v0.3.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
+	golang.org/x/crypto v0.57.0 // indirect
 	golang.org/x/exp v0.0.0-20260529124908-c761662dc8c9 // indirect
 	golang.org/x/mod v0.41.0 // indirect
 	golang.org/x/oauth2 v0.37.0 // indirect
@@ -213,6 +211,7 @@ require (
 	golang.org/x/term v0.46.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/time v0.16.0 // indirect
+	golang.org/x/tools v0.49.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260715232425-e75dac1f907d // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260921155816-b14227669459 // indirect

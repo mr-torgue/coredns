@@ -11,13 +11,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coredns/coredns/plugin/file"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/plugin/file"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/test"
 
 	publicdns "github.com/Azure/azure-sdk-for-go/profiles/latest/dns/mgmt/dns"
 	privatedns "github.com/Azure/azure-sdk-for-go/profiles/latest/privatedns/mgmt/privatedns"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 type azureAPIHandler func(http.ResponseWriter, *http.Request) bool

@@ -18,7 +18,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 // Exercise Kea's actual RFC 4703 state machine. Only the lease-change

@@ -17,12 +17,12 @@ import (
 	"sync"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
 
 	"github.com/caddyserver/certmagic"
 	"github.com/mholt/acmez/v3/acme"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/net/idna"

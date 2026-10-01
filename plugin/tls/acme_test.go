@@ -10,13 +10,13 @@ import (
 	"testing"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/core/dnsserver"
-	"github.com/coredns/coredns/plugin"
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	"github.com/coredns/coredns/plugin/test"
+	"github.com/mr-torgue/coredns/core/dnsserver"
+	"github.com/mr-torgue/coredns/plugin"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	"github.com/mr-torgue/coredns/plugin/test"
 
 	"github.com/mholt/acmez/v3/acme"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestParseACMETLS(t *testing.T) {

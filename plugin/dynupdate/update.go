@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/plugin/tsig"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/plugin/tsig"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 var log = clog.NewWithPlugin(pluginName)

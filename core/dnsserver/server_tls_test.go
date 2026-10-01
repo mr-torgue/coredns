@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 type stubListener struct {

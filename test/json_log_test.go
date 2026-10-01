@@ -14,10 +14,10 @@ import (
 	"time"
 
 	"github.com/coredns/caddy"
-	"github.com/coredns/coredns/coremain"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/coremain"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func TestJSONLoggingProcess(t *testing.T) {

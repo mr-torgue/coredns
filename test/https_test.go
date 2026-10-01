@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/coredns/caddy"
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 var httpsCorefile = `https://.:0 {

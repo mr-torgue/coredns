@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 const (

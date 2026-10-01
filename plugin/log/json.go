@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/coredns/coredns/plugin/pkg/dnstest"
-	clog "github.com/coredns/coredns/plugin/pkg/log"
-	"github.com/coredns/coredns/request"
+	"github.com/mr-torgue/coredns/plugin/pkg/dnstest"
+	clog "github.com/mr-torgue/coredns/plugin/pkg/log"
+	"github.com/mr-torgue/coredns/request"
 
-	"github.com/miekg/dns"
+	"github.com/mr-torgue/dns"
 )
 
 func logJSON(msg string, state request.Request, rr *dnstest.Recorder) {
