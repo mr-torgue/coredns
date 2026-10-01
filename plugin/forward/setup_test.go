@@ -48,6 +48,7 @@ func TestSetup(t *testing.T) {
 		forward com ::2`, false, ".", nil, 2, proxy.Options{HCRecursionDesired: true, HCDomain: "."}, "plugin"},
 		{"forward . tls://[2400:3200::1%dns.alidns.com]:853 {\ntls\n}\n", false, ".", nil, 2, proxy.Options{HCRecursionDesired: true, HCDomain: "."}, ""},
 		{"forward . https://127.0.0.1 \n", false, ".", nil, 2, proxy.Options{HCRecursionDesired: true, HCDomain: "."}, ""},
+		{"forward . quic://127.0.0.1 \n", false, ".", nil, 2, proxy.Options{HCRecursionDesired: true, HCDomain: "."}, ""},
 		// negative
 		{"forward . https://1.1.1.1/ \n", true, "", nil, 0, proxy.Options{HCRecursionDesired: true, HCDomain: "."}, "paths are not allowed in HTTPS upstream addresses"},
 		{"forward . a27.0.0.1", true, "", nil, 0, proxy.Options{HCRecursionDesired: true, HCDomain: "."}, "failed to resolve"},
@@ -91,6 +92,17 @@ func TestSetup(t *testing.T) {
 				t.Errorf("Test %d: expected: %v, got: %v", i, test.expectedOpts, f.opts)
 			}
 		}
+	}
+}
+
+func TestSetupKeepsDoTAndDoQAtSameAddress(t *testing.T) {
+	c := caddy.NewTestController("dns", `forward . tls://127.0.0.1 quic://127.0.0.1`)
+	fs, err := parseForward(c)
+	if err != nil {
+		t.Fatalf("parseForward() failed: %v", err)
+	}
+	if got := len(fs[0].proxies); got != 2 {
+		t.Fatalf("proxy count = %d, want 2", got)
 	}
 }
 
@@ -144,13 +156,23 @@ func TestSplitZone(t *testing.T) {
 		}, {
 			"tls://127.0.0.1%example.net", "tls://127.0.0.1", "example.net",
 		}, {
+			"https://127.0.0.1%example.net:443", "https://127.0.0.1:443", "example.net",
+		}, {
+			"https://127.0.0.1%example.net", "https://127.0.0.1", "example.net",
+		}, {
+			"quic://127.0.0.1%example.net:853", "quic://127.0.0.1:853", "example.net",
+		}, {
 			"tls://127.0.0.1:854", "tls://127.0.0.1:854", "",
+		}, {
+			"https://127.0.0.1:443", "https://127.0.0.1:443", "",
 		}, {
 			"dns://127.0.0.1", "dns://127.0.0.1", "",
 		}, {
 			"foo%bar:baz", "foo:baz", "bar",
 		}, {
 			"tls://[::1%example.net]:853", "tls://[::1]:853", "example.net",
+		}, {
+			"https://[::1%example.net]:443", "https://[::1]:443", "example.net",
 		},
 	}
 	for i, test := range tests {
@@ -185,10 +207,16 @@ func TestSetupTLS(t *testing.T) {
 		{`forward . tls://127.0.0.1%example.net:854 {
 				tls
 			}`, false, "example.net", ""},
+		{`forward . quic://127.0.0.1%doq.example:853 {
+				tls
+			}`, false, "doq.example", ""},
 		// SNI specifications clash test
 		{`forward . tls://127.0.0.1%example.net:854 {
 				tls_servername foo
 			}`, true, "", "both forward ('foo') and proxy level ('example.net') TLS servernames are set for upstream proxy 'tls://127.0.0.1:854'"},
+		{`forward . quic://127.0.0.1%doq.example:853 {
+				tls_servername foo
+			}`, true, "", "both forward ('foo') and proxy level ('doq.example') TLS servernames are set for upstream proxy 'quic://127.0.0.1:853'"},
 		{`forward . 127.0.0.1 {
 				tls_servername dns
 			}`, false, "", ""},
@@ -397,13 +425,15 @@ func TestSetupMaxConnectAttempts(t *testing.T) {
 		input       string
 		shouldErr   bool
 		expectedVal uint32
+		expectedSet bool
 		expectedErr string
 	}{
 
-		{"forward . 127.0.0.1 {\n}\n", false, 0, ""},
-		{"forward . 127.0.0.1 {\nmax_connect_attempts 5\n}\n", false, 5, ""},
-		{"forward . 127.0.0.1 {\nmax_connect_attempts many\n}\n", true, 0, "invalid"},
-		{"forward . 127.0.0.1 {\nmax_connect_attempts -4\n}\n", true, 0, "invalid"},
+		{"forward . 127.0.0.1 {\n}\n", false, 0, false, ""},
+		{"forward . 127.0.0.1 {\nmax_connect_attempts 0\n}\n", false, 0, true, ""},
+		{"forward . 127.0.0.1 {\nmax_connect_attempts 5\n}\n", false, 5, true, ""},
+		{"forward . 127.0.0.1 {\nmax_connect_attempts many\n}\n", true, 0, false, "invalid"},
+		{"forward . 127.0.0.1 {\nmax_connect_attempts -4\n}\n", true, 0, false, "invalid"},
 	}
 
 	for i, test := range tests {
@@ -428,6 +458,9 @@ func TestSetupMaxConnectAttempts(t *testing.T) {
 			f := fs[0]
 			if f.maxConnectAttempts != test.expectedVal {
 				t.Errorf("Test %d: expected: %d, got: %d", i, test.expectedVal, f.maxConnectAttempts)
+			}
+			if f.maxConnectAttemptsSet != test.expectedSet {
+				t.Errorf("Test %d: expected configured state %t, got %t", i, test.expectedSet, f.maxConnectAttemptsSet)
 			}
 		}
 	}
@@ -927,8 +960,17 @@ func TestSetupDOHHealthcheckTLSConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got := fs[0].
-		proxies[0].
+	p := fs[0].proxies[0]
+
+	if gothost := p.DoHHost(); gothost != "dns.example" {
+		t.Fatalf(
+			"Expected dohHost %q, got %q",
+			"dns.example",
+			gothost,
+		)
+	}
+
+	got := p.
 		GetHealthchecker().
 		GetTLSConfig()
 

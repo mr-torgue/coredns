@@ -27,6 +27,10 @@ import (
 const (
 	// DefaultHTTPSMaxConnections is the default maximum number of concurrent connections.
 	DefaultHTTPSMaxConnections = 200
+
+	// DefaultHTTPSMaxStreams is the default maximum number of concurrent HTTP/2 streams
+	// per connection, used when max_streams is not specified.
+	DefaultHTTPSMaxStreams = 250
 )
 
 // ServerHTTPS represents an instance of a DNS-over-HTTPS server.
@@ -54,18 +58,13 @@ type HTTPRequestKey struct{}
 
 // NewServerHTTPS returns a new CoreDNS HTTPS server and compiles all plugins in to it.
 func NewServerHTTPS(addr string, group []*Config) (*ServerHTTPS, error) {
-	s, err := NewServer(addr, group)
+	tlsConfig, err := sharedTLSConfig(addr, group)
 	if err != nil {
 		return nil, err
 	}
-	// The *tls* plugin must make sure that multiple conflicting
-	// TLS configuration returns an error: it can only be specified once.
-	var tlsConfig *tls.Config
-	for _, z := range s.zones {
-		for _, conf := range z {
-			// Should we error if some configs *don't* have TLS?
-			tlsConfig = conf.TLSConfig
-		}
+	s, err := NewServer(addr, group)
+	if err != nil {
+		return nil, err
 	}
 
 	// http/2 is recommended when using DoH. We need to specify it in next protos
@@ -90,6 +89,31 @@ func NewServerHTTPS(addr string, group []*Config) (*ServerHTTPS, error) {
 		WriteTimeout: s.WriteTimeout,
 		IdleTimeout:  s.IdleTimeout,
 		ErrorLog:     stdlog.New(&loggerAdapter{}, "", 0),
+	}
+	// max_streams limits the number of concurrent HTTP/2 streams per connection. When unset,
+	// DefaultHTTPSMaxStreams is applied; a value of 0 leaves the underlying HTTP/2 transport
+	// default in place; a positive value sets the limit explicitly. The chosen value is
+	// advertised in the server's SETTINGS frame. Resolve across the whole group since blocks
+	// sharing a listener share one HTTP/2 server; conflicting explicit values are rejected.
+	maxStreams := DefaultHTTPSMaxStreams
+	var resolved *int
+	for _, conf := range group {
+		if conf == nil || conf.MaxHTTPSStreams == nil {
+			continue
+		}
+		if resolved != nil && *resolved != *conf.MaxHTTPSStreams {
+			return nil, fmt.Errorf("conflicting max_streams values for shared HTTPS listener %s: %d and %d",
+				addr, *resolved, *conf.MaxHTTPSStreams)
+		}
+		resolved = conf.MaxHTTPSStreams
+	}
+	if resolved != nil {
+		maxStreams = *resolved
+	}
+	if maxStreams > 0 {
+		srv.HTTP2 = &http.HTTP2Config{
+			MaxConcurrentStreams: maxStreams,
+		}
 	}
 	maxConnections := DefaultHTTPSMaxConnections
 	if len(group) > 0 && group[0] != nil && group[0].MaxHTTPSConnections != nil {
@@ -156,7 +180,7 @@ func (s *ServerHTTPS) OnStartupComplete() {
 
 	out := startUpZones(transport.HTTPS+"://", s.Addr, s.zones)
 	if out != "" {
-		fmt.Print(out)
+		printStartup(out)
 	}
 }
 
@@ -205,9 +229,9 @@ func (s *ServerHTTPS) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if tsig := msg.IsTsig(); tsig != nil {
-		if s.tsigSecret == nil {
+		if s.TsigSecret == nil {
 			dw.tsigStatus = dns.ErrSecret
-		} else if secret, ok := s.tsigSecret[tsig.Hdr.Name]; !ok {
+		} else if secret, ok := s.TsigSecret[tsig.Hdr.Name]; !ok {
 			dw.tsigStatus = dns.ErrSecret
 		} else {
 			dw.tsigStatus = dns.TsigVerify(raw, secret, "", false)

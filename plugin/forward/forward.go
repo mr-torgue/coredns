@@ -1,7 +1,6 @@
-// Package forward implements a forwarding proxy. It caches an upstream net.Conn for some time, so if the same
-// client returns the upstream's Conn will be precached. Depending on how you benchmark this looks to be
-// 50% faster than just opening a new connection for every client. It works with UDP and TCP and uses
-// inband healthchecking.
+// Package forward implements a DNS forwarding proxy. It reuses upstream
+// connections across DNS, DoT, DoH, and DoQ transports and uses in-band
+// health checking.
 package forward
 
 import (
@@ -30,9 +29,10 @@ import (
 var log = clog.NewWithPlugin("forward")
 
 const (
-	defaultExpire      = 10 * time.Second
-	defaultReadTimeout = 2 * time.Second
-	hcInterval         = 500 * time.Millisecond
+	defaultExpire                     = 10 * time.Second
+	defaultReadTimeout                = 2 * time.Second
+	hcInterval                        = 500 * time.Millisecond
+	defaultConnectAttemptsPerUpstream = 2
 )
 
 // Forward represents a plugin instance that can proxy requests to another (DNS) server. It has a list
@@ -62,6 +62,7 @@ type Forward struct {
 	failfastUnhealthyUpstreams bool
 	failoverRcodes             []int
 	maxConnectAttempts         uint32
+	maxConnectAttemptsSet      bool
 	sourceAddress              net.IP
 
 	// Hostname resolution fields
@@ -135,9 +136,22 @@ func (f *Forward) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 	list := f.List()
 	deadline := time.Now().Add(defaultTimeout)
 	start := time.Now()
-	connectAttempts := uint32(0)
+	maxConnectAttempts := uint64(f.maxConnectAttempts)
+	if !f.maxConnectAttemptsSet {
+		maxConnectAttempts = uint64(defaultConnectAttemptsPerUpstream) * uint64(len(list))
+	}
+	connectAttempts := uint64(0)
+	tlsDeadline := deadline
+	if d, ok := ctx.Deadline(); ok && d.Before(tlsDeadline) {
+		tlsDeadline = d
+	}
+	tlsConnectTimeout := time.Until(tlsDeadline)
+	if maxConnectAttempts != 1 {
+		// Reserve time for a fresh connection if the first TLS handshake stalls.
+		tlsConnectTimeout /= 2
+	}
 
-	for time.Now().Before(deadline) && ctx.Err() == nil && (f.maxConnectAttempts == 0 || connectAttempts < f.maxConnectAttempts) {
+	for time.Now().Before(deadline) && ctx.Err() == nil && (maxConnectAttempts == 0 || connectAttempts < maxConnectAttempts) {
 		if i >= len(list) {
 			// reached the end of list, reset to begin
 			i = 0
@@ -182,9 +196,13 @@ func (f *Forward) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 		opts := f.opts
 
 		for {
+			opts.TLSConnectDeadline = time.Now().Add(tlsConnectTimeout)
+			if opts.TLSConnectDeadline.After(tlsDeadline) {
+				opts.TLSConnectDeadline = tlsDeadline
+			}
 			ret, localAddr, upstreamProto, err = proxy.Connect(ctx, state, opts)
 
-			if err == proxyPkg.ErrCachedClosed { // Remote side closed conn, can only happen with TCP.
+			if err == proxyPkg.ErrCachedClosed { // The peer closed a cached TCP or QUIC connection before the query was sent.
 				continue
 			}
 			// Retry with TCP if truncated and prefer_udp configured.
@@ -209,17 +227,18 @@ func (f *Forward) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 			if errors.Is(err, proxyPkg.ErrInvalidRequest) {
 				return dns.RcodeFormatError, err
 			}
+			if errors.Is(err, proxyPkg.ErrUnsupportedRequest) {
+				return dns.RcodeNotImplemented, err
+			}
 
 			// Kick off health check to see if *our* upstream is broken.
 			if f.maxfails != 0 {
 				proxy.Healthcheck()
 			}
 
-			// If a per-request connect-attempt cap is configured, count this
-			// failed connect attempt and stop retrying when the cap is hit.
-			if f.maxConnectAttempts > 0 {
+			if maxConnectAttempts > 0 {
 				connectAttempts++
-				if connectAttempts >= f.maxConnectAttempts {
+				if connectAttempts >= maxConnectAttempts {
 					break
 				}
 			}

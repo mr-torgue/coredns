@@ -70,6 +70,10 @@ type Config struct {
 	// TLSConfig when listening for encrypted connections (gRPC, DNS-over-TLS).
 	TLSConfig *tls.Config
 
+	// tlsConfigIdentity identifies dynamic TLS configurations that are known to
+	// represent the same listener-wide policy even after tls.Config.Clone.
+	tlsConfigIdentity *TLSConfigIdentity
+
 	// MaxQUICStreams defines the maximum number of concurrent QUIC streams for a QUIC server.
 	// This is nil if not specified, allowing for a default to be used.
 	MaxQUICStreams *int
@@ -114,17 +118,34 @@ type Config struct {
 	// This is nil if not specified, allowing for a default to be used.
 	MaxHTTPSConnections *int
 
+	// MaxHTTPSStreams defines the maximum number of concurrent HTTP/2 streams per HTTPS connection.
+	// This is nil if not specified, allowing for a default to be used.
+	MaxHTTPSStreams *int
+
 	// MaxHTTPS3Streams defines the maximum number of concurrent QUIC streams for HTTPS3.
 	// This is nil if not specified, allowing for a default to be used.
 	MaxHTTPS3Streams *int
+
+	// MaxHTTPS3Connections defines the maximum number of concurrent HTTPS3 connections.
+	// This is nil if not specified, allowing for a default to be used.
+	MaxHTTPS3Connections *int
 
 	// Timeouts for connection-oriented servers. Exact applicability depends on transport.
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 	IdleTimeout  time.Duration
 
+	// MaxTCPQueries defines the maximum number of queries served on a single TCP/TLS
+	// connection before it is closed. -1 means unlimited. This is nil if not specified,
+	// allowing for a default to be used.
+	MaxTCPQueries *int
+
 	// TSIG secrets, [name]key.
 	TsigSecret map[string]string
+
+	// allowedOpcodes contains non-default DNS opcodes that plugins have explicitly
+	// requested for this server block. QUERY and NOTIFY are accepted by default.
+	allowedOpcodes map[int]struct{}
 
 	// Plugin stack.
 	Plugin []plugin.Plugin
@@ -148,6 +169,22 @@ type Config struct {
 // FilterFunc is a function that filters requests from the Config
 type FilterFunc func(context.Context, *request.Request) bool
 
+// TLSConfigIdentity is an opaque identity for equivalent dynamic TLS policies.
+// Plugins should share one identity only when they can prove that independently
+// constructed TLS configs are interchangeable on the same listener.
+type TLSConfigIdentity struct {
+	_ byte
+}
+
+// NewTLSConfigIdentity returns a new opaque TLS policy identity.
+func NewTLSConfigIdentity() *TLSConfigIdentity { return &TLSConfigIdentity{} }
+
+// SetTLSConfigIdentity associates an opaque listener-wide policy identity with
+// this config.
+func (c *Config) SetTLSConfigIdentity(identity *TLSConfigIdentity) {
+	c.tlsConfigIdentity = identity
+}
+
 // keyForConfig builds a key for identifying the configs during setup time
 func keyForConfig(blocIndex int, blocKeyIndex int) string {
 	return fmt.Sprintf("%d:%d", blocIndex, blocKeyIndex)
@@ -166,4 +203,23 @@ func GetConfig(c *caddy.Controller) *Config {
 	// the configs.
 	ctx.saveConfig(key, &Config{ListenHosts: []string{""}})
 	return GetConfig(c)
+}
+
+// AddPluginToAllServerBlocks adds m once to every server block in c's
+// instance. It is intended for directives that must handle traffic on a
+// listener other than the one where the directive is configured.
+func AddPluginToAllServerBlocks(c *caddy.Controller, m plugin.Plugin) {
+	ctx := c.Context().(*dnsContext)
+	seen := make(map[*Config]struct{})
+	for _, cfg := range ctx.configs {
+		first := cfg.firstConfigInBlock
+		if first == nil {
+			first = cfg
+		}
+		if _, ok := seen[first]; ok {
+			continue
+		}
+		seen[first] = struct{}{}
+		first.AddPlugin(m)
+	}
 }

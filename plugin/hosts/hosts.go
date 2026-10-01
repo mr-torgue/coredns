@@ -17,6 +17,8 @@ type Hosts struct {
 	Next plugin.Handler
 	*Hostsfile
 
+	zones plugin.Zones
+
 	Fall fall.F
 
 	fallthroughUnsupported bool
@@ -27,10 +29,13 @@ func (h Hosts) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	state := request.Request{W: w, Req: r}
 	qname := state.Name()
 
-	answers := []dns.RR{}
+	var answers []dns.RR
 
-	zone := plugin.Zones(h.Origins).Matches(qname)
-	if zone == "" {
+	zones := h.zones
+	if zones == nil {
+		zones = plugin.Zones(h.Origins)
+	}
+	if !zones.Contains(qname) {
 		// PTR zones don't need to be specified in Origins.
 		if state.QType() != dns.TypePTR {
 			// if this doesn't match we need to fall through regardless of h.Fallthrough

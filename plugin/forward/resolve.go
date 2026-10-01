@@ -16,8 +16,8 @@ import (
 // hostEntry represents a hostname-based TO address that needs DNS resolution.
 type hostEntry struct {
 	hostname  string // the hostname to resolve (e.g., "rbldnsd.rbldnsd.svc.cluster.local")
-	port      string // port (e.g., "53", "853")
-	transport string // "dns" or "tls"
+	port      string // port (e.g., "53", "443", "853")
+	transport string // "dns", "tls", "quic", or "https"
 	zone      string // TLS server name zone (from %zone syntax)
 }
 
@@ -67,15 +67,20 @@ func parseAsHostEntry(h string) (hostEntry, bool) {
 	cleanH, zone := splitZone(h)
 	trans, host := parse.Transport(cleanH)
 
-	// Only dns and tls transports are supported for hostname resolution
-	if trans != transport.DNS && trans != transport.TLS {
+	// Only forward-supported transports are accepted for hostname resolution.
+	if trans != transport.DNS && trans != transport.TLS && trans != transport.QUIC && trans != transport.HTTPS {
 		return hostEntry{}, false
 	}
 
 	hostname := host
 	port := transport.Port
-	if trans == transport.TLS {
+	switch trans {
+	case transport.TLS:
 		port = transport.TLSPort
+	case transport.QUIC:
+		port = transport.QUICPort
+	case transport.HTTPS:
+		port = transport.HTTPSPort
 	}
 
 	// Check if there's a port
@@ -123,8 +128,7 @@ func expandAndDedup(entries []toEntry, resolvers []string) ([]string, error) {
 		}
 
 		for _, addr := range addrs {
-			// Normalize the address for dedup comparison
-			key := normalizeAddr(addr)
+			key := dedupKey(addr)
 			if !seen[key] {
 				seen[key] = true
 				result = append(result, addr)
@@ -134,8 +138,16 @@ func expandAndDedup(entries []toEntry, resolvers []string) ([]string, error) {
 	return result, nil
 }
 
-// normalizeAddr extracts the canonical IP:port from an address string
-// (stripping transport prefix and zone) for deduplication.
+// dedupKey identifies an upstream endpoint without collapsing distinct
+// transports or TLS server names that happen to use the same IP and port.
+func dedupKey(addr string) string {
+	host, zone := splitZone(addr)
+	trans, endpoint := parse.Transport(host)
+	return trans + "\x00" + endpoint + "\x00" + strings.ToLower(zone)
+}
+
+// normalizeAddr extracts the IP:port from an address string, stripping its
+// transport prefix and TLS server name.
 func normalizeAddr(addr string) string {
 	host, _ := splitZone(addr)
 	_, h := parse.Transport(host)
@@ -161,14 +173,14 @@ func formatResolvedAddr(ip, port, trans, zone string) string {
 	isIPv6 := strings.Contains(ip, ":")
 
 	switch trans {
-	case transport.TLS:
+	case transport.TLS, transport.QUIC, transport.HTTPS:
 		if zone != "" {
 			if isIPv6 {
-				return transport.TLS + "://[" + ip + "%" + zone + "]:" + port
+				return trans + "://[" + ip + "%" + zone + "]:" + port
 			}
-			return transport.TLS + "://" + ip + "%" + zone + ":" + port
+			return trans + "://" + ip + "%" + zone + ":" + port
 		}
-		return transport.TLS + "://" + net.JoinHostPort(ip, port)
+		return trans + "://" + net.JoinHostPort(ip, port)
 	default: // transport.DNS
 		return net.JoinHostPort(ip, port)
 	}
@@ -183,9 +195,11 @@ func lookupHost(hostname string, resolvers []string) ([]string, error) {
 	return dnsLookup(hostname, resolvers)
 }
 
+var netLookupHost = net.LookupHost
+
 // systemLookup resolves using the system resolver (/etc/resolv.conf).
 func systemLookup(hostname string) ([]string, error) {
-	ips, err := net.LookupHost(hostname)
+	ips, err := netLookupHost(dns.Fqdn(hostname))
 	if err != nil {
 		return nil, err
 	}

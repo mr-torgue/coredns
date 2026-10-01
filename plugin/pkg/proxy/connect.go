@@ -1,6 +1,6 @@
 // Package proxy implements a forwarding proxy with connection caching.
-// It manages a pool of upstream connections (UDP and TCP) to reuse them for subsequent requests,
-// reducing latency and handshake overhead. It supports in-band health checking.
+// It reuses upstream DNS, DoT, DoH, and DoQ connections to reduce latency and
+// handshake overhead. It supports in-band health checking.
 package proxy
 
 import (
@@ -57,6 +57,20 @@ func (t *Transport) updateDialTimeout(newDialTime time.Duration) {
 
 // Dial dials the address configured in transport, potentially reusing a connection or creating a new one.
 func (t *Transport) Dial(proto string) (*persistConn, bool, error) {
+	return t.DialContext(context.Background(), proto)
+}
+
+// DialContext is like Dial but honors ctx while establishing a new connection,
+// including the TLS handshake. The context does not affect the connection after dialing.
+func (t *Transport) DialContext(ctx context.Context, proto string) (*persistConn, bool, error) {
+	return t.dial(ctx, proto, time.Time{})
+}
+
+func (t *Transport) dial(ctx context.Context, proto string, tlsDeadline time.Time) (*persistConn, bool, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, false, err
+	}
+
 	// If tls has been configured; use it.
 	if t.tlsConfig != nil {
 		proto = "tcp-tls"
@@ -97,6 +111,11 @@ func (t *Transport) Dial(proto string) (*persistConn, bool, error) {
 
 	connCacheMissesCount.WithLabelValues(t.proxyName, t.addr, proto).Add(1)
 
+	if proto == "tcp-tls" && !tlsDeadline.IsZero() {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithDeadline(ctx, tlsDeadline)
+		defer cancel()
+	}
 	reqTime := time.Now()
 	timeout := t.dialTimeout()
 	dialer := &net.Dialer{Timeout: timeout}
@@ -112,13 +131,13 @@ func (t *Transport) Dial(proto string) (*persistConn, bool, error) {
 	// pass nil tlsConfig to use system default
 	client := dns.Client{Net: proto, Dialer: dialer, TLSConfig: t.tlsConfig}
 
-	conn, err := client.Dial(t.addr)
+	conn, err := client.DialContext(ctx, t.addr)
 
 	t.updateDialTimeout(time.Since(reqTime))
 	return &persistConn{c: conn, created: time.Now()}, false, err
 }
 
-func (p *Proxy) lookupDNS(_ctx context.Context, state request.Request, opts Options) (*dns.Msg, net.Addr, string, error) {
+func (p *Proxy) lookupDNS(ctx context.Context, state request.Request, opts Options) (*dns.Msg, net.Addr, string, error) {
 	var proto string
 	switch {
 	case opts.ForceTCP: // TCP flag has precedence over UDP flag
@@ -144,7 +163,7 @@ func (p *Proxy) lookupDNS(_ctx context.Context, state request.Request, opts Opti
 		}
 	}
 
-	pc, cached, err := p.transport.Dial(proto)
+	pc, cached, err := p.transport.dial(ctx, proto, opts.TLSConnectDeadline)
 	if err != nil {
 		return nil, nil, proto, err
 	}
@@ -186,6 +205,12 @@ func (p *Proxy) lookupDNS(_ctx context.Context, state request.Request, opts Opti
 	for {
 		ret, err = pc.c.ReadMsg()
 		if err != nil {
+			if p.transport.transportTypeFromConn(pc) == typeUDP &&
+				((ret == nil && errors.Is(err, dns.ErrShortRead)) ||
+					(ret != nil && ret.Id != state.Req.Id)) {
+				continue
+			}
+
 			if ret != nil && (state.Req.Id == ret.Id) && p.transport.transportTypeFromConn(pc) == typeUDP && shouldTruncateResponse(err) {
 				// For UDP, if the error is an overflow, we probably have an upstream misbehaving in some way.
 				// (e.g. sending >512 byte responses without an eDNS0 OPT RR).
@@ -222,6 +247,13 @@ func (p *Proxy) lookupDoH(ctx context.Context, state request.Request, _ Options)
 	// DoH always runs over TCP (HTTPS), regardless of the downstream
 	// client's protocol.
 	const proto = "tcp"
+	// records the origin Id before upstream.
+	originId := state.Req.Id
+	// RFC8484 has DNS ID of 0 as a SHOULD
+	state.Req.Id = 0
+	defer func() {
+		state.Req.Id = originId
+	}()
 
 	var localAddr net.Addr
 	trace := &httptrace.ClientTrace{
@@ -231,7 +263,7 @@ func (p *Proxy) lookupDoH(ctx context.Context, state request.Request, _ Options)
 	}
 	ctx = httptrace.WithClientTrace(ctx, trace)
 
-	req, err := doh.NewRequestWithContext(ctx, p.dohMethod, p.addr, state.Req)
+	req, err := doh.NewRequestWithContext(ctx, p.dohMethod, p.addr, p.dohHost, state.Req)
 	if err != nil {
 		return nil, nil, proto, err
 	}
@@ -247,7 +279,22 @@ func (p *Proxy) lookupDoH(ctx context.Context, state request.Request, _ Options)
 		return nil, localAddr, proto, err
 	}
 
+	// recovery the origin Id after upstream.
+	if ret != nil {
+		ret.Id = originId
+	}
 	return ret, localAddr, proto, nil
+}
+
+func (p *Proxy) lookupDoQ(ctx context.Context, state request.Request, _ Options) (*dns.Msg, net.Addr, string, error) {
+	// QUIC runs over UDP. Reporting udp keeps dnstap query_address and
+	// response_address consistent with the actual upstream socket.
+	const proto = "udp"
+	if p.doq == nil {
+		return nil, nil, proto, errors.New("proxy: DoQ transport is not initialized")
+	}
+	ret, localAddr, err := p.doq.exchange(ctx, state.Req, p.readTimeout)
+	return ret, localAddr, proto, err
 }
 
 // Connect selects an upstream, sends the request and waits for a response. It
@@ -267,6 +314,8 @@ func (p *Proxy) Connect(ctx context.Context, state request.Request, opts Options
 	switch p.protocol {
 	case transport.HTTPS:
 		ret, localAddr, proto, err = p.lookupDoH(ctx, state, opts)
+	case transport.QUIC:
+		ret, localAddr, proto, err = p.lookupDoQ(ctx, state, opts)
 	case transport.DNS, transport.TLS:
 		ret, localAddr, proto, err = p.lookupDNS(ctx, state, opts)
 	default:

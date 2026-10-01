@@ -32,7 +32,7 @@ func init() { plugin.Register(pluginName, setup) }
 
 func setup(c *caddy.Controller) error {
 	// Do not call klog.InitFlags(nil) here.  It will cause reload to panic.
-	klog.SetLogger(logr.New(&loggerAdapter{log}))
+	klog.SetLogger(logr.New(&loggerAdapter{P: log}))
 
 	k, err := kubernetesParse(c)
 	if err != nil {
@@ -207,6 +207,11 @@ func ParseStanza(c *caddy.Controller) (*Kubernetes, error) {
 				return nil, c.ArgErr()
 			}
 			k8s.opts.initEndpointsCache = false
+		case "zonal":
+			if len(c.RemainingArgs()) != 0 {
+				return nil, c.ArgErr()
+			}
+			k8s.opts.zonal = true
 		case "ignore":
 			args := c.RemainingArgs()
 			if len(args) > 0 {
@@ -295,6 +300,13 @@ func ParseStanza(c *caddy.Controller) (*Kubernetes, error) {
 		if !slices.Contains(k8s.Zones, multiclusterZone) {
 			return nil, c.Errf("is not authoritative for the multicluster zone %s (authoritative zones: %v)", multiclusterZone, k8s.Zones)
 		}
+	}
+
+	if k8s.opts.zonal && !k8s.opts.initEndpointsCache {
+		// Zone-scoped names are answered from the endpoint cache;
+		// without it every zonal name would contradict the documented
+		// noendpoints behavior (NXDOMAIN for all headless queries).
+		return nil, c.Errf("zonal requires the endpoint cache; remove noendpoints")
 	}
 
 	return k8s, nil
