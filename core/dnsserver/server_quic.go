@@ -15,6 +15,7 @@ import (
 	"github.com/coredns/coredns/plugin/pkg/dnsutil"
 	clog "github.com/coredns/coredns/plugin/pkg/log"
 	cproxyproto "github.com/coredns/coredns/plugin/pkg/proxyproto"
+	"github.com/coredns/coredns/plugin/pkg/replaycache"
 	"github.com/coredns/coredns/plugin/pkg/reuseport"
 	"github.com/coredns/coredns/plugin/pkg/transport"
 
@@ -47,6 +48,14 @@ const (
 
 	// DefaultQUICMaxConnections is the default maximum number of concurrent connections.
 	DefaultQUICMaxConnections = 200
+
+	// DefaultQUICReplayCacheTTL is the window during which an identical 0-RTT
+	// early-data message from the same client address is treated as a replay.
+	DefaultQUICReplayCacheTTL = 30 * time.Second
+
+	// DefaultQUICReplayCacheSize bounds the number of entries in the 0-RTT
+	// replay cache.
+	DefaultQUICReplayCacheSize = 4096
 )
 
 // ServerQUIC represents an instance of a DNS-over-QUIC server.
@@ -60,6 +69,7 @@ type ServerQUIC struct {
 	streamProcessPool chan struct{}
 	maxConnections    int
 	connSem           chan struct{}
+	replayCache       *replaycache.Cache
 }
 
 // NewServerQUIC returns a new CoreDNS QUIC server and compiles all plugin in to it.
@@ -112,6 +122,7 @@ func NewServerQUIC(addr string, group []*Config) (*ServerQUIC, error) {
 		streamProcessPool: make(chan struct{}, streamProcessPoolSize),
 		maxConnections:    maxConnections,
 		connSem:           connSem,
+		replayCache:       replaycache.New(DefaultQUICReplayCacheTTL, DefaultQUICReplayCacheSize),
 	}, nil
 }
 
@@ -247,6 +258,20 @@ func (s *ServerQUIC) serveQUICStream(stream *quic.Stream, conn *quic.Conn) {
 		return
 	}
 
+	// RFC 9250 §4.3.3 makes receiving a "replayable" transaction in 0-RTT data
+	// a protocol error, but quic-go does not expose the session identity
+	// needed to enforce single-use tickets (RFC 8446 §8). Mitigate with a
+	// best-effort replay cache instead: identical early data from the same
+	// client address within the window is dropped. RFC 9250 §4.5 makes
+	// QUERY/NOTIFY replayable, so this is not fatal for the client.
+	if s.replayed0RTT(conn.ConnectionState().Used0RTT, buf, conn.RemoteAddr().String()) {
+		clog.Debugf("suspected 0-RTT replay from %s, dropping stream", conn.RemoteAddr())
+		vars.QUICZeroRTTReplays.WithLabelValues(s.Addr).Inc()
+		stream.CancelWrite(quic.StreamErrorCode(DoQCodeNoError))
+
+		return
+	}
+
 	req, err := dnsutil.UnpackRequest(buf)
 	if err != nil {
 		clog.Debugf("unpacking quic packet: %s", err)
@@ -288,6 +313,15 @@ func (s *ServerQUIC) serveQUICStream(stream *quic.Stream, conn *quic.Conn) {
 	dnsCtx = context.WithValue(dnsCtx, LoopKey{}, 0)
 	s.ServeDNS(dnsCtx, w, req)
 	s.countResponse(DoQCodeNoError)
+}
+
+// replayed0RTT reports whether buf is a suspected replay of 0-RTT early data
+// previously seen from remoteAddr within the replay window.
+func (s *ServerQUIC) replayed0RTT(used0RTT bool, buf []byte, remoteAddr string) bool {
+	if !used0RTT || s.replayCache == nil {
+		return false
+	}
+	return !s.replayCache.Add(replaycache.Key(buf, []byte(remoteAddr)), time.Now())
 }
 
 // ListenPacket implements caddy.UDPServer interface.
@@ -391,7 +425,8 @@ func validRequest(req *dns.Msg) (ok bool) {
 
 	// 4. a server receives a "replayable" transaction in 0-RTT data
 	//
-	// The information necessary to validate this is not exposed by quic-go.
+	// The information necessary to validate this is not exposed by quic-go,
+	// so serveQUICStream mitigates with a best-effort replay cache instead.
 
 	return true
 }
