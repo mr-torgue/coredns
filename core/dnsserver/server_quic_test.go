@@ -127,6 +127,42 @@ func TestNewServerQUICDefaults(t *testing.T) {
 	}
 }
 
+func TestNewServerQUICReplayCache(t *testing.T) {
+	server, err := NewServerQUIC("127.0.0.1:0", []*Config{testConfig("quic", testPlugin{})})
+	if err != nil {
+		t.Fatalf("NewServerQUIC() failed: %v", err)
+	}
+	if server.replayCache == nil {
+		t.Fatal("Expected replayCache to be initialized")
+	}
+}
+
+func TestServerQUICReplayed0RTT(t *testing.T) {
+	server, err := NewServerQUIC("127.0.0.1:0", []*Config{testConfig("quic", testPlugin{})})
+	if err != nil {
+		t.Fatalf("NewServerQUIC() failed: %v", err)
+	}
+
+	buf := []byte("early-data query bytes")
+	addr := "192.0.2.1:53"
+
+	if server.replayed0RTT(false, buf, addr) {
+		t.Error("1-RTT message must never be flagged as replay")
+	}
+	if server.replayed0RTT(true, buf, addr) {
+		t.Error("first 0-RTT message must be fresh")
+	}
+	if !server.replayed0RTT(true, buf, addr) {
+		t.Error("identical 0-RTT message from the same address must be flagged as replay")
+	}
+	if server.replayed0RTT(true, buf, "192.0.2.2:53") {
+		t.Error("identical 0-RTT message from a different address must not be flagged")
+	}
+	if server.replayed0RTT(true, []byte("other query bytes"), addr) {
+		t.Error("different 0-RTT message from the same address must not be flagged")
+	}
+}
+
 func TestServerQUIC_ServeAndListen(t *testing.T) {
 	server, err := NewServerQUIC("127.0.0.1:0", []*Config{testConfig("quic", testPlugin{})})
 	if err != nil {

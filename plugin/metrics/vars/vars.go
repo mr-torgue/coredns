@@ -89,6 +89,13 @@ var (
 		Name:      "quic_responses_total",
 		Help:      "Counter of DoQ responses per server and QUIC application code.",
 	}, []string{"server", "status"})
+
+	QUICZeroRTTReplays = promauto.NewCounterVec(prometheus.CounterOpts{
+		Namespace: plugin.Namespace,
+		Subsystem: subsystem,
+		Name:      "quic_zerortt_replays_total",
+		Help:      "Counter of suspected 0-RTT replayed DoQ messages per server.",
+	}, []string{"server"})
 )
 
 const (
